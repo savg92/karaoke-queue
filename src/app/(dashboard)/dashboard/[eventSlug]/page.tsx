@@ -153,6 +153,7 @@ function DashboardClient({ eventSlug }: { eventSlug: string }) {
 						<QRCodeDialog
 							eventUrl={eventUrl}
 							eventName={event.name}
+							eventDate={event.date}
 						/>
 					</div>
 				</div>

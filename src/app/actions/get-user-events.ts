@@ -31,7 +31,7 @@ async function _getUserEvents(userEmail: string) {
 		};
 	}
 
-	const eventIds = profile.events.map(event => event.id);
+	const eventIds = profile.events.map((event) => event.id);
 	const signupCounts = await prisma.signup.groupBy({
 		by: ['eventId'],
 		where: {
@@ -57,14 +57,10 @@ async function _getUserEvents(userEmail: string) {
 }
 
 // Cache the function for 60 seconds
-const getCachedUserEvents = unstable_cache(
-	_getUserEvents,
-	['user-events'],
-	{
-		revalidate: 60,
-		tags: ['user-events'],
-	}
-);
+const getCachedUserEvents = unstable_cache(_getUserEvents, ['user-events'], {
+	revalidate: 60,
+	tags: ['user-events'],
+});
 
 export async function getUserEvents() {
 	const supabase = await createClient();
@@ -78,7 +74,7 @@ export async function getUserEvents() {
 	}
 
 	const result = await getCachedUserEvents(user.email!);
-	
+
 	if (!result) {
 		redirect('/login');
 	}

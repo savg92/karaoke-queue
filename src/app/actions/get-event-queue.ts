@@ -7,7 +7,10 @@ import { SignupStatus } from '@prisma/client';
 import { unstable_cache } from 'next/cache';
 import type { EventQueueData } from '@/app/(dashboard)/dashboard/[eventSlug]/types';
 
-async function _getEventWithQueue(eventSlug: string, userEmail: string): Promise<EventQueueData> {
+async function _getEventWithQueue(
+	eventSlug: string,
+	userEmail: string
+): Promise<EventQueueData> {
 	// Optimized query - only fetch what we need
 	const event = await prisma.event.findUnique({
 		where: { slug: eventSlug },
@@ -78,7 +81,9 @@ const getCachedEventQueue = unstable_cache(
 	}
 );
 
-export async function getEventWithQueue(eventSlug: string): Promise<EventQueueData> {
+export async function getEventWithQueue(
+	eventSlug: string
+): Promise<EventQueueData> {
 	const supabase = await createClient();
 	const {
 		data: { user },
