@@ -1,28 +1,22 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Profile {
-  id        String  @id @default(uuid())
-  email     String  @unique
-  givenName String? @map("given_name")
-  familyName String? @map("family_name")
-  picture   String?
-  events    Event[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id         String   @id @default(uuid())
+  email      String   @unique
+  givenName  String?  @map("given_name")
+  familyName String?  @map("family_name")
+  picture    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  events     Event[]
 
   @@map("profiles")
 }
@@ -34,30 +28,33 @@ model Event {
   description String?
   date        DateTime
   hostId      String   @map("host_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
   host        Profile  @relation(fields: [hostId], references: [id], onDelete: Cascade)
   signups     Signup[]
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  @@index([hostId])
   @@map("events")
 }
 
 model Signup {
-  id           String         @id @default(uuid())
-  singerName   String         @map("singer_name")
-  songTitle    String         @map("song_title")
-  artist       String
+  id              String          @id @default(uuid())
+  singerName      String          @map("singer_name")
+  songTitle       String          @map("song_title")
+  artist          String
   performanceType PerformanceType @default(SOLO) @map("performance_type")
-  notes        String?
-  position     Int
-  status       SignupStatus   @default(QUEUED)
-  eventId      String         @map("event_id")
-  event        Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  notes           String?
+  position        Int
+  status          SignupStatus    @default(QUEUED)
+  eventId         String          @map("event_id")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  event           Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  @@index([eventId])
+  @@index([status])
+  @@index([eventId, status])
+  @@index([position])
   @@map("signups")
 }
 
