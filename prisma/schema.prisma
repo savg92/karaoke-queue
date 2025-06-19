@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id        String  @id @default(uuid())
+  email     String  @unique
+  givenName String? @map("given_name")
+  familyName String? @map("family_name")
+  picture   String?
+  events    Event[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("profiles")
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  date        DateTime
+  hostId      String   @map("host_id")
+  host        Profile  @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  signups     Signup[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("events")
+}
+
+model Signup {
+  id           String         @id @default(uuid())
+  singerName   String         @map("singer_name")
+  songTitle    String         @map("song_title")
+  artist       String
+  performanceType PerformanceType @default(SOLO) @map("performance_type")
+  notes        String?
+  position     Int
+  status       SignupStatus   @default(QUEUED)
+  eventId      String         @map("event_id")
+  event        Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("signups")
+}
+
+enum PerformanceType {
+  SOLO
+  DUET
+  GROUP
+}
+
+enum SignupStatus {
+  QUEUED
+  PERFORMING
+  COMPLETE
+  CANCELLED
+}

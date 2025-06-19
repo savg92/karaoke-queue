@@ -1,0 +1,15 @@
+# Secrets
+.env*
+**/*.pem
+**/*.key
+
+# Dependencies and Build Artifacts
+node_modules/
+dist/
+build/
+.next/
+.vercel/
+
+# Logs and temp files
+*.log
+.DS_Store
