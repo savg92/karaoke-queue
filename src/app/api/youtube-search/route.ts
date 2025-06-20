@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 				`q=${encodeURIComponent(query)}&` +
 				`part=snippet&` +
 				// `type=video&` +
-				`maxResults=10&` +
+				`maxResults=9&` +
 				// `videoEmbeddable=true&` +
 				`fields=items(id/videoId,snippet(title,channelTitle,thumbnails/default/url))`
 		);

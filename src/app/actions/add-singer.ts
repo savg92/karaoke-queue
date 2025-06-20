@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { signupSchema } from '@/lib/validators/signup';
 import { calculateQueuePosition } from '@/lib/queue-logic';
+import { PerformanceType, SignupStatus } from '@prisma/client';
 
 // Type definition for the server action response
 export type AddSingerResult = {
@@ -12,6 +13,10 @@ export type AddSingerResult = {
 	queuePosition?: number;
 	errors?: {
 		singerName?: string[];
+		singerName1?: string[];
+		singerName2?: string[];
+		singerName3?: string[];
+		singerName4?: string[];
 		songTitle?: string[];
 		artist?: string[];
 		performanceType?: string[];
@@ -32,10 +37,14 @@ export async function addSinger(
 	try {
 		// Extract and validate form data
 		const rawData = {
+			performanceType: formData.get('performanceType'),
 			singerName: formData.get('singerName'),
+			singerName1: formData.get('singerName1'),
+			singerName2: formData.get('singerName2'),
+			singerName3: formData.get('singerName3'),
+			singerName4: formData.get('singerName4'),
 			songTitle: formData.get('songTitle'),
 			artist: formData.get('artist'),
-			performanceType: formData.get('performanceType'),
 			notes: formData.get('notes') || '',
 		};
 
@@ -50,14 +59,35 @@ export async function addSinger(
 			};
 		}
 
-		const validatedData = validation.data;
+		const { data: validatedData } = validation;
+
+		// Determine the singer name for the database based on performance type
+		let dbSingerName: string;
+		switch (validatedData.performanceType) {
+			case 'SOLO':
+				dbSingerName = validatedData.singerName!;
+				break;
+			case 'DUET':
+				dbSingerName = `${validatedData.singerName1} & ${validatedData.singerName2}`;
+				break;
+			case 'GROUP':
+				// Combine all non-empty singer names for group
+				const groupSingers = [
+					validatedData.singerName1,
+					validatedData.singerName2,
+					validatedData.singerName3,
+					validatedData.singerName4,
+				].filter((name) => name && name.trim().length > 0);
+				dbSingerName = groupSingers.join(' & ');
+				break;
+		}
 
 		// Fetch the current queue for this event
 		const currentQueue = await prisma.signup.findMany({
 			where: {
 				eventId: eventId,
 				status: {
-					in: ['QUEUED', 'PERFORMING'],
+					in: [SignupStatus.QUEUED, SignupStatus.PERFORMING],
 				},
 			},
 			orderBy: {
@@ -77,42 +107,43 @@ export async function addSinger(
 				...entry,
 				queuePosition: entry.position,
 			})),
-			validatedData.singerName
+			dbSingerName
 		);
 
 		// Create the new signup record
 		await prisma.signup.create({
 			data: {
 				eventId: eventId,
-				singerName: validatedData.singerName,
+				singerName: dbSingerName,
 				songTitle: validatedData.songTitle,
 				artist: validatedData.artist,
-				performanceType: validatedData.performanceType,
-				notes: validatedData.notes,
-				status: 'QUEUED',
+				performanceType: validatedData.performanceType as PerformanceType,
+				status: SignupStatus.QUEUED,
 				position: queuePosition,
 			},
 		});
 
 		// Revalidate the event page to update the queue display
-		// Note: We'll revalidate both the event page and any dashboard pages
-		revalidatePath(`/event/[eventSlug]`, 'page');
-		revalidatePath(`/dashboard/[eventSlug]`, 'page');
+		const event = await prisma.event.findUnique({
+			where: { id: eventId },
+			select: { slug: true },
+		});
+
+		if (event) {
+			revalidatePath(`/event/${event.slug}`);
+			revalidatePath(`/dashboard/${event.slug}`);
+		}
 
 		return {
 			success: true,
-			message: `Successfully added to the queue at position ${queuePosition}!`,
+			message: `Successfully added to the queue! You are number ${queuePosition}.`,
 			queuePosition: queuePosition,
 		};
 	} catch (error) {
-		console.error('Error adding singer to queue:', error);
-
+		console.error('Error adding singer:', error);
 		return {
 			success: false,
-			message: 'Something went wrong. Please try again.',
-			errors: {
-				_form: ['Unable to add you to the queue. Please try again.'],
-			},
+			message: 'An unexpected error occurred. Please try again later.',
 		};
 	}
 }

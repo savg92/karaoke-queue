@@ -40,18 +40,23 @@ export function YouTubeCard({ result, onSelect }: YouTubeCardProps) {
 			<CardContent className='p-3'>
 				<div className='flex flex-col gap-2'>
 					{/* Thumbnail */}
-					<div className='relative '>
+					<button
+						onClick={handleOpenVideo}
+						className='relative w-full cursor-pointer group overflow-hidden rounded-md'
+					>
 						<Image
 							src={result.snippet.thumbnails.default.url}
 							alt={result.snippet.title}
 							width={80}
 							height={50}
-							className='rounded-md object-cover w-full h-14'
+							className='object-cover w-full h-14 transition-transform duration-300 group-hover:scale-110'
 						/>
-						{/* <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md opacity-0 hover:opacity-100 transition-opacity duration-200'>
-							<Play className='w-3 h-3 text-white' />
-						</div> */}
-					</div>
+						<div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300'>
+							<div className='flex items-center justify-center w-12 h-12 bg-black/50 backdrop-blur-sm rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-300'>
+								<Play className='w-7 h-7 text-white transition-transform duration-200 delay-100 group-hover:scale-110' />
+							</div>
+						</div>
+					</button>
 
 					{/* Content */}
 					<div className='flex-1 min-w-0 px-2'>
@@ -79,9 +84,9 @@ export function YouTubeCard({ result, onSelect }: YouTubeCardProps) {
 								<Button
 									// size='sm'
 									onClick={handleSelect}
-									className='flex items-center justify-center gap-1 w-full h-6 text-xs'
+									className='group flex items-center justify-center gap-1 w-full h-6 text-xs'
 								>
-									<Play className='w-3 h-3' />
+									<Play className='w-3 h-3 transition-transform duration-200 group-hover:scale-125' />
 									Select
 								</Button>
 							)}

@@ -107,7 +107,7 @@ export function AutoYouTubeSearch({
 		);
 	}
 
-	const displayedResults = showAll ? results : results.slice(0, 3);
+	const displayedResults = showAll ? results.slice(0, 9) : results.slice(0, 3);
 	const hasMoreResults = results.length > 3;
 
 	return (
@@ -140,7 +140,7 @@ export function AutoYouTubeSearch({
 						) : (
 							<>
 								<ChevronDown className='w-3 h-3 mr-1' />
-								Show More ({results.length - 3} more)
+								Show More 
 							</>
 						)}
 					</Button>

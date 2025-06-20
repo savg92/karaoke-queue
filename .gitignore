@@ -51,3 +51,6 @@ next-env.d.ts
 
 # test-results
 /test-results/
+
+# prisma
+/prisma/migrations/

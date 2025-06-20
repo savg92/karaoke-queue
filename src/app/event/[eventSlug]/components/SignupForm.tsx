@@ -47,13 +47,19 @@ export function SignupForm({ eventId, onSuccess }: SignupFormProps) {
 	const form = useForm<SignupFormData>({
 		resolver: zodResolver(signupSchema),
 		defaultValues: {
+			performanceType: 'SOLO',
 			singerName: '',
+			singerName1: '',
+			singerName2: '',
+			singerName3: '',
+			singerName4: '',
 			songTitle: '',
 			artist: '',
-			performanceType: 'SOLO',
 			notes: '',
 		},
 	});
+
+	const performanceType = form.watch('performanceType');
 
 	const onSubmit = async (data: SignupFormData) => {
 		setIsSubmitting(true);
@@ -62,11 +68,23 @@ export function SignupForm({ eventId, onSuccess }: SignupFormProps) {
 		try {
 			// Create FormData from the validated data
 			const formData = new FormData();
-			formData.append('singerName', data.singerName);
+			formData.append('performanceType', data.performanceType);
 			formData.append('songTitle', data.songTitle);
 			formData.append('artist', data.artist);
-			formData.append('performanceType', data.performanceType);
 			formData.append('notes', data.notes || '');
+
+			// Append names based on performance type
+			if (data.performanceType === 'SOLO') {
+				formData.append('singerName', data.singerName || '');
+			} else if (data.performanceType === 'DUET') {
+				formData.append('singerName1', data.singerName1 || '');
+				formData.append('singerName2', data.singerName2 || '');
+			} else if (data.performanceType === 'GROUP') {
+				formData.append('singerName1', data.singerName1 || '');
+				formData.append('singerName2', data.singerName2 || '');
+				formData.append('singerName3', data.singerName3 || '');
+				formData.append('singerName4', data.singerName4 || '');
+			}
 
 			// Call the server action
 			const result = await addSinger(eventId, formData);
@@ -135,20 +153,154 @@ export function SignupForm({ eventId, onSuccess }: SignupFormProps) {
 					>
 						<FormField
 							control={form.control}
-							name='singerName'
+							name='performanceType'
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Your Name</FormLabel>
-									<FormControl>
-										<Input
-											placeholder='Enter your name'
-											{...field}
-										/>
-									</FormControl>
+									<FormLabel>Performance Type</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder='Select performance type' />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value='SOLO'>Solo</SelectItem>
+											<SelectItem value='DUET'>Duet</SelectItem>
+											<SelectItem value='GROUP'>Group</SelectItem>
+										</SelectContent>
+									</Select>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
+
+						{performanceType === 'SOLO' && (
+							<FormField
+								control={form.control}
+								name='singerName'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Your Name</FormLabel>
+										<FormControl>
+											<Input
+												placeholder='Enter your name'
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						)}
+
+						{performanceType === 'DUET' && (
+							<div className='space-y-4'>
+								<FormField
+									control={form.control}
+									name='singerName1'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Singer 1 Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Enter first singer's name"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='singerName2'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Singer 2 Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Enter second singer's name"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+						)}
+
+						{performanceType === 'GROUP' && (
+							<div className='space-y-4'>
+								<FormField
+									control={form.control}
+									name='singerName1'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Singer 1 Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Enter first singer's name"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='singerName2'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Singer 2 Name (Optional)</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Enter second singer's name"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='singerName3'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Singer 3 Name (Optional)</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Enter third singer's name"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='singerName4'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Singer 4 Name (Optional)</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Enter fourth singer's name"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+						)}
 
 						<FormField
 							control={form.control}
@@ -179,32 +331,6 @@ export function SignupForm({ eventId, onSuccess }: SignupFormProps) {
 											{...field}
 										/>
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name='performanceType'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Performance Type</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder='Select performance type' />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											<SelectItem value='SOLO'>Solo</SelectItem>
-											<SelectItem value='DUET'>Duet</SelectItem>
-											<SelectItem value='GROUP'>Group</SelectItem>
-										</SelectContent>
-									</Select>
 									<FormMessage />
 								</FormItem>
 							)}
