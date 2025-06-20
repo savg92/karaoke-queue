@@ -113,14 +113,22 @@ function SortableRow({
 		>
 			<TableCell className='font-medium'>
 				<div className='flex items-center gap-2'>
-					<button
-						className='cursor-grab hover:text-gray-600 active:cursor-grabbing'
-						{...attributes}
-						{...listeners}
-					>
-						<GripVertical className='h-4 w-4' />
-					</button>
-					{signup.position}
+					{signup.status === SignupStatus.QUEUED && (
+						<button
+							className='cursor-grab hover:text-gray-600 active:cursor-grabbing'
+							{...attributes}
+							{...listeners}
+						>
+							<GripVertical className='h-4 w-4' />
+						</button>
+					)}
+					{signup.status === SignupStatus.PERFORMING ? (
+						<span className='text-amber-600 font-semibold'>Now</span>
+					) : signup.status === SignupStatus.QUEUED ? (
+						signup.position
+					) : (
+						<span className='text-muted-foreground'>-</span>
+					)}
 				</div>
 			</TableCell>
 			<TableCell>{signup.singerName}</TableCell>
@@ -213,11 +221,22 @@ export function QueueTable({
 
 			const reorderedSignups = arrayMove(signups, oldIndex, newIndex);
 
-			// Update positions
-			const updatedSignups = reorderedSignups.map((signup, index) => ({
-				...signup,
-				position: index + 1,
-			}));
+			// Update positions - only assign sequential positions to QUEUED signups
+			const updatedSignups = reorderedSignups.map((signup) => {
+				if (signup.status !== SignupStatus.QUEUED) {
+					// Non-queued signups (PERFORMING, COMPLETE, etc.) should have position 0
+					return { ...signup, position: 0 };
+				}
+				return signup;
+			});
+
+			// Assign sequential positions to QUEUED signups only
+			const queuedSignups = updatedSignups.filter(
+				(s) => s.status === SignupStatus.QUEUED
+			);
+			queuedSignups.forEach((signup, index) => {
+				signup.position = index + 1;
+			});
 
 			if (onReorderSignups) {
 				onReorderSignups(updatedSignups);

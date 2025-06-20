@@ -21,9 +21,12 @@ export function useRealtimeQueue(eventSlug: string) {
 					table: 'signups',
 				},
 				() => {
-					// Invalidate the queue query when signups change
+					// Invalidate both queue queries when signups change
 					queryClient.invalidateQueries({
 						queryKey: ['event-queue', eventSlug],
+					});
+					queryClient.invalidateQueries({
+						queryKey: ['all-event-signups', eventSlug],
 					});
 				}
 			)

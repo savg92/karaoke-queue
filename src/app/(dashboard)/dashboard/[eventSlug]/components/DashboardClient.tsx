@@ -5,9 +5,12 @@ import {
 	useUpdateSignupStatus,
 	useRemoveSignup,
 	useReorderSignups,
+	useAllEventSignups,
 } from '../hooks/useEventQueue';
 import { useRealtimeQueue } from '../hooks/useRealtimeQueue';
 import { QueueTable } from './QueueTable';
+import { AttendeesTable } from './AttendeesTable';
+import { AddAttendeeForm } from './AddAttendeeForm';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -31,6 +34,11 @@ interface DashboardClientProps {
 
 export function DashboardClient({ eventSlug }: DashboardClientProps) {
 	const { data, isLoading, error, refetch } = useEventQueue(eventSlug);
+	const {
+		data: allSignups,
+		isLoading: isLoadingAttendees,
+		refetch: refetchAttendees,
+	} = useAllEventSignups(eventSlug);
 	const updateStatusMutation = useUpdateSignupStatus(eventSlug);
 	const removeSignupMutation = useRemoveSignup(eventSlug);
 	const reorderSignupsMutation = useReorderSignups(eventSlug);
@@ -234,6 +242,9 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 							<AutoYouTubeSearch
 								songTitle={upNextSinger.songTitle}
 								artist={upNextSinger.artist}
+								signup={upNextSinger}
+								onUpdateStatus={handleUpdateStatus}
+								currentPerformer={performingSinger}
 							/>
 						</CardContent>
 					</Card>
@@ -255,6 +266,53 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 							onRemoveSignup={handleRemoveSignup}
 							onReorderSignups={handleReorderSignups}
 						/>
+					</CardContent>
+				</Card>
+
+				{/* All Attendees Table */}
+				<Card>
+					<CardHeader>
+						<div className='flex items-center justify-between'>
+							<div>
+								<CardTitle>All Event Attendees</CardTitle>
+								<CardDescription>
+									Complete list of everyone who has signed up for your event,
+									including completed and cancelled signups.
+								</CardDescription>
+							</div>
+							<AddAttendeeForm
+								eventId={event.id}
+								onSuccess={() => {
+									// Refetch both queries after successful addition
+									refetch();
+									refetchAttendees();
+								}}
+							/>
+						</div>
+					</CardHeader>
+					<CardContent>
+						{isLoadingAttendees ? (
+							<div className='space-y-3'>
+								{[...Array(3)].map((_, i) => (
+									<div
+										key={i}
+										className='h-12 bg-muted rounded animate-pulse'
+									/>
+								))}
+							</div>
+						) : allSignups ? (
+							<AttendeesTable
+								signups={allSignups}
+								onUpdateStatus={handleUpdateStatus}
+								onRemoveSignup={handleRemoveSignup}
+							/>
+						) : (
+							<div className='text-center py-4'>
+								<p className='text-muted-foreground'>
+									No attendees data available.
+								</p>
+							</div>
+						)}
 					</CardContent>
 				</Card>
 			</div>

@@ -6,21 +6,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { YouTubeCard } from './YouTubeCard';
-
-interface YouTubeResult {
-	id: { videoId: string };
-	snippet: {
-		title: string;
-		channelTitle: string;
-		thumbnails: {
-			default: { url: string };
-		};
-	};
-}
+import { SignupStatus } from '@prisma/client';
+import type { QueueItem } from '../types';
+import type { YouTubeResult } from './youtube.types';
 
 interface AutoYouTubeSearchProps {
 	songTitle: string;
 	artist: string;
+	// Optional signup and update function for "up next" functionality
+	signup?: QueueItem;
+	onUpdateStatus?: (signupId: string, status: SignupStatus) => void;
+	// Current performing singer (to complete them when starting new performance)
+	currentPerformer?: QueueItem;
 }
 
 // Function to fetch YouTube search results
@@ -38,14 +35,18 @@ const fetchYouTubeSearch = async (query: string): Promise<YouTubeResult[]> => {
 	}
 
 	const data = await response.json();
+	console.log('YouTube API response:', data);
 	return data.items || [];
 };
 
 export function AutoYouTubeSearch({
 	songTitle,
 	artist,
+	signup,
+	onUpdateStatus,
+	currentPerformer,
 }: AutoYouTubeSearchProps) {
-	const searchQuery = `"${songTitle}" "${artist}" karaoke`;
+	const searchQuery = `"${artist}" "${songTitle}" karaoke "Sing King"`;
 	const [showAll, setShowAll] = useState(false);
 
 	// Use React Query to automatically fetch results
@@ -110,16 +111,33 @@ export function AutoYouTubeSearch({
 	const displayedResults = showAll ? results.slice(0, 9) : results.slice(0, 3);
 	const hasMoreResults = results.length > 3;
 
+	// Ensure displayedResults is always an array and filter out any invalid items
+	const validResults = Array.isArray(displayedResults)
+		? displayedResults.filter(
+				(result) =>
+					result &&
+					result.id &&
+					result.id.videoId &&
+					result.snippet &&
+					result.snippet.thumbnails &&
+					(result.snippet.thumbnails.high?.url ||
+						result.snippet.thumbnails.default?.url)
+		  )
+		: [];
+
 	return (
 		<div className='space-y-3'>
 			<p className='text-sm text-muted-foreground'>
 				YouTube karaoke tracks for this performance:
 			</p>
 			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr py-2'>
-				{displayedResults.map((result) => (
+				{validResults.map((result) => (
 					<YouTubeCard
 						key={result.id.videoId}
 						result={result}
+						signup={signup}
+						onUpdateStatus={onUpdateStatus}
+						currentPerformer={currentPerformer}
 					/>
 				))}
 			</div>
@@ -140,7 +158,7 @@ export function AutoYouTubeSearch({
 						) : (
 							<>
 								<ChevronDown className='w-3 h-3 mr-1' />
-								Show More 
+								Show More
 							</>
 						)}
 					</Button>

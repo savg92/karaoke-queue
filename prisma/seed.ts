@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function main() {
 	// Create a test profile with an email you can access
 	const profile = await prisma.profile.upsert({
-		where: { email: 'test.savg.dev@gmail.com' },
+		where: { email: '1992savg@gmail.com' },
 		update: {},
 		create: {
 			email: '1992savg@gmail.com',
@@ -32,36 +32,53 @@ async function main() {
 		where: { eventId: event.id },
 	});
 
-	await prisma.signup.createMany({
-		data: [
-			{
-				singerName: 'John Doe',
-				songTitle: 'Bohemian Rhapsody',
-				artist: 'Queen',
-				performanceType: 'SOLO',
-				position: 1,
-				status: 'QUEUED',
-				eventId: event.id,
-			},
-			{
-				singerName: 'Jane Smith',
-				songTitle: "Don't Stop Believin'",
-				artist: 'Journey',
-				performanceType: 'SOLO',
-				position: 2,
-				status: 'QUEUED',
-				eventId: event.id,
-			},
-			{
-				singerName: 'Bob & Alice',
-				songTitle: 'Islands in the Stream',
-				artist: 'Kenny Rogers & Dolly Parton',
-				performanceType: 'DUET',
-				position: 3,
-				status: 'PERFORMING',
-				eventId: event.id,
-			},
-		],
+	// Create signups individually since createMany doesn't support optional fields like performingAt
+	await prisma.signup.create({
+		data: {
+			singerName: 'John Doe',
+			songTitle: 'Bohemian Rhapsody',
+			artist: 'Queen',
+			performanceType: 'SOLO',
+			position: 1,
+			status: 'QUEUED',
+			eventId: event.id,
+		},
+	});
+
+	await prisma.signup.create({
+		data: {
+			singerName: 'Jane Smith',
+			songTitle: "Don't Stop Believin'",
+			artist: 'Journey',
+			performanceType: 'SOLO',
+			position: 2,
+			status: 'QUEUED',
+			eventId: event.id,
+		},
+	});
+
+	await prisma.signup.create({
+		data: {
+			singerName: 'Bob & Alice',
+			songTitle: 'Islands in the Stream',
+			artist: 'Kenny Rogers & Dolly Parton',
+			performanceType: 'DUET',
+			position: 3,
+			status: 'PERFORMING',
+			eventId: event.id,
+		},
+	});
+
+	await prisma.signup.create({
+		data: {
+			singerName: 'Charlie Brown',
+			songTitle: 'Sweet Caroline',
+			artist: 'Neil Diamond',
+			performanceType: 'SOLO',
+			position: 0, // This one was completed
+			status: 'COMPLETE',
+			eventId: event.id,
+		},
 	});
 
 	console.log('Seed data created successfully!');

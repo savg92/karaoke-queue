@@ -47,12 +47,12 @@ The goal is to build a real-time web application for managing a karaoke night. T
     - Move utility functions to `.utils.ts` files.
     - Create custom hooks for ALL complex logic, state management, and side effects.
     - Split UI into focused, single-purpose sub-components.
-3.  **Start Small, Stay Small**: Begin with minimal functionality and split immediately when approaching 100 lines.
+3.  **Start Small, Stay Small**: Begin with minimal functionality and split immediately when approaching 50 lines.
 
 ### File and Component Size Limits
 
-- **Maximum component file size**: 150 lines (HARD LIMIT).
-- **Target component file size**: 50-100 lines (IDEAL RANGE).
+- **Maximum component file size**: 75 lines (HARD LIMIT).
+- **Target component file size**: 50 lines (IDEAL RANGE).
 - **Immediate Action**: Split any file approaching 100 lines. Don't wait.
 
 ### Security and Compliance Mandate

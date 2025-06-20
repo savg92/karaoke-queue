@@ -3,23 +3,18 @@
 import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
-import { SignupStatus } from '@prisma/client';
 import { unstable_cache } from 'next/cache';
-import type { EventQueueData } from '@/app/(dashboard)/dashboard/[eventSlug]/types';
+import type { QueueItem } from '@/app/(dashboard)/dashboard/[eventSlug]/types';
 
-async function _getEventWithQueue(
+async function _getAllEventSignups(
 	eventSlug: string,
 	userEmail: string
-): Promise<EventQueueData> {
-	// Optimized query - only fetch what we need
+): Promise<QueueItem[]> {
+	// Fetch the event and verify ownership
 	const event = await prisma.event.findUnique({
 		where: { slug: eventSlug },
 		select: {
 			id: true,
-			name: true,
-			slug: true,
-			date: true,
-			description: true,
 			host: {
 				select: {
 					email: true,
@@ -37,42 +32,30 @@ async function _getEventWithQueue(
 		throw new Error('Unauthorized: You are not the host of this event');
 	}
 
-	// Fetch only active signups with optimized query
+	// Fetch ALL signups for this event
 	const signups = await prisma.signup.findMany({
 		where: {
 			eventId: event.id,
-			status: {
-				in: [SignupStatus.QUEUED, SignupStatus.PERFORMING],
-			},
 		},
-		orderBy: { position: 'asc' },
+		orderBy: { createdAt: 'asc' }, // Order by creation time for attendees view
 	});
 
-	return {
-		event: {
-			id: event.id,
-			name: event.name,
-			slug: event.slug,
-			date: event.date,
-			description: event.description,
-		},
-		signups,
-	};
+	return signups;
 }
 
-// Cache for 30 seconds since queue data changes frequently
-const getCachedEventQueue = unstable_cache(
-	_getEventWithQueue,
-	['event-queue'],
+// Cache for 30 seconds since attendee data changes less frequently
+const getCachedAllSignups = unstable_cache(
+	_getAllEventSignups,
+	['all-event-signups'],
 	{
 		revalidate: 30,
-		tags: ['event-queue'],
+		tags: ['all-event-signups', 'event-queue'],
 	}
 );
 
-export async function getEventWithQueue(
+export async function getAllEventSignups(
 	eventSlug: string
-): Promise<EventQueueData> {
+): Promise<QueueItem[]> {
 	const supabase = await createClient();
 	const {
 		data: { user },
@@ -83,5 +66,5 @@ export async function getEventWithQueue(
 		redirect('/login');
 	}
 
-	return getCachedEventQueue(eventSlug, user.email!);
+	return getCachedAllSignups(eventSlug, user.email!);
 }

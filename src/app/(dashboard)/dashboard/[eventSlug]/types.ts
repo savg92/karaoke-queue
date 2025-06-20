@@ -20,6 +20,7 @@ export type QueueItem = {
 	performanceType: PerformanceType;
 	status: SignupStatus;
 	position: number;
+	performingAt?: Date | null;
 	notes?: string | null;
 };
 

@@ -1,5 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+interface YouTubeSearchItem {
+	id: { videoId: string };
+	snippet: {
+		title: string;
+		channelTitle: string;
+		thumbnails: {
+			default: { url: string };
+			high: { url: string };
+		};
+	};
+}
+
+interface YouTubeSearchResponse {
+	items?: YouTubeSearchItem[];
+}
+
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
 	const query = searchParams.get('q');
@@ -20,20 +36,26 @@ export async function GET(request: NextRequest) {
 				{
 					id: { videoId: 'mock1' },
 					snippet: {
-						title: `${query} - Search Result 1`,
+						title: `${query} - Mock Result 1`,
 						channelTitle: 'Mock Channel',
 						thumbnails: {
-							default: { url: '/placeholder-thumbnail.jpg' },
+							default: {
+								url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/default.jpg',
+							},
+							high: { url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg' },
 						},
 					},
 				},
 				{
 					id: { videoId: 'mock2' },
 					snippet: {
-						title: `${query} - Search Result 2`,
+						title: `${query} - Mock Result 2`,
 						channelTitle: 'Another Mock Channel',
 						thumbnails: {
-							default: { url: '/placeholder-thumbnail.jpg' },
+							default: {
+								url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/default.jpg',
+							},
+							high: { url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg' },
 						},
 					},
 				},
@@ -50,14 +72,34 @@ export async function GET(request: NextRequest) {
 				// `type=video&` +
 				`maxResults=9&` +
 				// `videoEmbeddable=true&` +
-				`fields=items(id/videoId,snippet(title,channelTitle,thumbnails/default/url))`
+				`fields=items(id/videoId,snippet(title,channelTitle,thumbnails/default/url,thumbnails/high/url))`
 		);
 
 		if (!response.ok) {
 			throw new Error('YouTube API request failed');
 		}
 
-		const data = await response.json();
+		const data: YouTubeSearchResponse = await response.json();
+
+		// Prioritize "Sing King" channel results
+		if (data.items && Array.isArray(data.items)) {
+			data.items.sort((a: YouTubeSearchItem, b: YouTubeSearchItem) => {
+				const aIsSingKing = a.snippet?.channelTitle
+					?.toLowerCase()
+					.includes('sing king');
+				const bIsSingKing = b.snippet?.channelTitle
+					?.toLowerCase()
+					.includes('sing king');
+
+				// If one is Sing King and the other isn't, prioritize Sing King
+				if (aIsSingKing && !bIsSingKing) return -1;
+				if (!aIsSingKing && bIsSingKing) return 1;
+
+				// If both are Sing King or neither are, maintain original order
+				return 0;
+			});
+		}
+
 		return NextResponse.json(data);
 	} catch (error) {
 		console.error('YouTube search error:', error);
@@ -66,12 +108,13 @@ export async function GET(request: NextRequest) {
 		return NextResponse.json({
 			items: [
 				{
-					id: { videoId: 'fallback1' },
+					id: { videoId: 'mock1' },
 					snippet: {
-						title: `${query} - Fallback Result`,
+						title: `${query} - Search Result 1 (Fallback)`,
 						channelTitle: 'Fallback Channel',
 						thumbnails: {
 							default: { url: '/placeholder-thumbnail.jpg' },
+							high: { url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg' },
 						},
 					},
 				},

@@ -38,11 +38,11 @@ export async function addSinger(
 		// Extract and validate form data
 		const rawData = {
 			performanceType: formData.get('performanceType'),
-			singerName: formData.get('singerName'),
-			singerName1: formData.get('singerName1'),
-			singerName2: formData.get('singerName2'),
-			singerName3: formData.get('singerName3'),
-			singerName4: formData.get('singerName4'),
+			singerName: formData.get('singerName') || undefined,
+			singerName1: formData.get('singerName1') || undefined,
+			singerName2: formData.get('singerName2') || undefined,
+			singerName3: formData.get('singerName3') || undefined,
+			singerName4: formData.get('singerName4') || undefined,
 			songTitle: formData.get('songTitle'),
 			artist: formData.get('artist'),
 			notes: formData.get('notes') || '',
@@ -82,16 +82,14 @@ export async function addSinger(
 				break;
 		}
 
-		// Fetch the current queue for this event
+		// Fetch the current queue for this event (only QUEUED singers)
 		const currentQueue = await prisma.signup.findMany({
 			where: {
 				eventId: eventId,
-				status: {
-					in: [SignupStatus.QUEUED, SignupStatus.PERFORMING],
-				},
+				status: SignupStatus.QUEUED,
 			},
 			orderBy: {
-				createdAt: 'asc',
+				position: 'asc',
 			},
 			select: {
 				id: true,
@@ -121,6 +119,30 @@ export async function addSinger(
 				status: SignupStatus.QUEUED,
 				position: queuePosition,
 			},
+		});
+
+		// After inserting the new signup, we need to update positions of subsequent entries
+		// to maintain sequential order (no gaps in positions) for QUEUED singers only
+		await prisma.$transaction(async (tx) => {
+			// Get all QUEUED signups for this event, ordered by position
+			const allQueuedSignups = await tx.signup.findMany({
+				where: {
+					eventId: eventId,
+					status: SignupStatus.QUEUED,
+				},
+				orderBy: [{ position: 'asc' }, { createdAt: 'asc' }],
+			});
+
+			// Reassign positions sequentially starting from 1 (only for QUEUED)
+			for (let i = 0; i < allQueuedSignups.length; i++) {
+				const correctPosition = i + 1;
+				if (allQueuedSignups[i].position !== correctPosition) {
+					await tx.signup.update({
+						where: { id: allQueuedSignups[i].id },
+						data: { position: correctPosition },
+					});
+				}
+			}
 		});
 
 		// Revalidate the event page to update the queue display
