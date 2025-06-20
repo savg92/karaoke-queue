@@ -5,6 +5,7 @@ import {
 	useUpdateSignupStatus,
 	useRemoveSignup,
 } from '../hooks/useEventQueue';
+import { useRealtimeQueue } from '../hooks/useRealtimeQueue';
 import { QueueTable } from './QueueTable';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,9 +16,12 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Share2, QrCode, RefreshCw } from 'lucide-react';
+import { Share2, RefreshCw, Music } from 'lucide-react';
 import { SignupStatus } from '@prisma/client';
 import { Skeleton } from '@/components/ui/skeleton';
+import { QRCodeDialog } from './QRCodeDialog';
+import { AutoYouTubeSearch } from './AutoYouTubeSearch';
+import { toast } from 'sonner';
 
 interface DashboardClientProps {
 	eventSlug: string;
@@ -27,6 +31,9 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 	const { data, isLoading, error, refetch } = useEventQueue(eventSlug);
 	const updateStatusMutation = useUpdateSignupStatus(eventSlug);
 	const removeSignupMutation = useRemoveSignup(eventSlug);
+
+	// Enable real-time updates
+	useRealtimeQueue(eventSlug);
 
 	const handleUpdateStatus = (signupId: string, status: SignupStatus) => {
 		updateStatusMutation.mutate({ signupId, status });
@@ -39,7 +46,7 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 	const handleShareEvent = () => {
 		const eventUrl = `${window.location.origin}/event/${eventSlug}`;
 		navigator.clipboard.writeText(eventUrl);
-		// Toast notification would be handled by the toast system
+		toast.success('Event link copied to clipboard!');
 	};
 
 	if (isLoading) {
@@ -103,12 +110,18 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 	const queuedCount = signups.filter(
 		(s) => s.status === SignupStatus.QUEUED
 	).length;
-	const performingCount = signups.filter(
-		(s) => s.status === SignupStatus.PERFORMING
-	).length;
 	const completedCount = signups.filter(
 		(s) => s.status === SignupStatus.COMPLETE
 	).length;
+
+	const performingSinger = signups.find(
+		(s) => s.status === SignupStatus.PERFORMING
+	);
+
+	// Find the singer who is "up next" (QUEUED with position 1)
+	const upNextSinger = signups.find(
+		(s) => s.status === SignupStatus.QUEUED && s.position === 1
+	);
 
 	return (
 		<div className='container mx-auto py-8'>
@@ -129,10 +142,13 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 							<Share2 className='mr-2 h-4 w-4' />
 							Share Event
 						</Button>
-						<Button variant='outline'>
-							<QrCode className='mr-2 h-4 w-4' />
-							QR Code
-						</Button>
+						<QRCodeDialog
+							eventUrl={`${
+								typeof window !== 'undefined' ? window.location.origin : ''
+							}/event/${eventSlug}`}
+							eventName={event.name}
+							eventDate={new Date(event.date)}
+						/>
 					</div>
 				</div>
 
@@ -153,14 +169,31 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 
 					<Card>
 						<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-							<CardTitle className='text-sm font-medium'>Performing</CardTitle>
-							<Badge variant='default'>{performingCount}</Badge>
+							<CardTitle className='text-sm font-medium'>
+								Now Performing
+							</CardTitle>
+							{performingSinger && (
+								<Music className='h-4 w-4 text-muted-foreground' />
+							)}
 						</CardHeader>
 						<CardContent>
-							<p className='text-2xl font-bold'>{performingCount}</p>
-							<p className='text-xs text-muted-foreground'>
-								Currently on stage
-							</p>
+							{performingSinger ? (
+								<>
+									<p className='text-2xl font-bold truncate'>
+										{performingSinger.singerName}
+									</p>
+									<p className='text-xs text-muted-foreground truncate'>
+										{performingSinger.songTitle} by {performingSinger.artist}
+									</p>
+								</>
+							) : (
+								<>
+									<p className='text-2xl font-bold'>Stage is Empty</p>
+									<p className='text-xs text-muted-foreground'>
+										No one is currently singing
+									</p>
+								</>
+							)}
 						</CardContent>
 					</Card>
 
@@ -177,6 +210,27 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 						</CardContent>
 					</Card>
 				</div>
+
+				{/* Up Next Singer - YouTube Search */}
+				{upNextSinger && (
+					<Card>
+						<CardHeader>
+							<CardTitle className='flex items-center gap-2'>
+								<Music className='w-5 h-5' />
+								Up Next: {upNextSinger.singerName}
+							</CardTitle>
+							<CardDescription>
+								{upNextSinger.songTitle} by {upNextSinger.artist}
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<AutoYouTubeSearch
+								songTitle={upNextSinger.songTitle}
+								artist={upNextSinger.artist}
+							/>
+						</CardContent>
+					</Card>
+				)}
 
 				{/* Queue Table */}
 				<Card>
