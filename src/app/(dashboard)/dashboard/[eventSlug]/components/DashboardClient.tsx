@@ -4,6 +4,7 @@ import {
 	useEventQueue,
 	useUpdateSignupStatus,
 	useRemoveSignup,
+	useReorderSignups,
 } from '../hooks/useEventQueue';
 import { useRealtimeQueue } from '../hooks/useRealtimeQueue';
 import { QueueTable } from './QueueTable';
@@ -22,6 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { QRCodeDialog } from './QRCodeDialog';
 import { AutoYouTubeSearch } from './AutoYouTubeSearch';
 import { toast } from 'sonner';
+import type { QueueItem } from '../types';
 
 interface DashboardClientProps {
 	eventSlug: string;
@@ -31,6 +33,7 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 	const { data, isLoading, error, refetch } = useEventQueue(eventSlug);
 	const updateStatusMutation = useUpdateSignupStatus(eventSlug);
 	const removeSignupMutation = useRemoveSignup(eventSlug);
+	const reorderSignupsMutation = useReorderSignups(eventSlug);
 
 	// Enable real-time updates
 	useRealtimeQueue(eventSlug);
@@ -41,6 +44,10 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 
 	const handleRemoveSignup = (signupId: string) => {
 		removeSignupMutation.mutate(signupId);
+	};
+
+	const handleReorderSignups = (reorderedSignups: QueueItem[]) => {
+		reorderSignupsMutation.mutate(reorderedSignups);
 	};
 
 	const handleShareEvent = () => {
@@ -246,6 +253,7 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 							signups={signups}
 							onUpdateStatus={handleUpdateStatus}
 							onRemoveSignup={handleRemoveSignup}
+							onReorderSignups={handleReorderSignups}
 						/>
 					</CardContent>
 				</Card>
