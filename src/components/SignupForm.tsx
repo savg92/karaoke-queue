@@ -61,9 +61,10 @@ export function SignupForm({ eventId, onSuccess }: SignupFormProps) {
 		try {
 			// TODO: Implement the server action to add the singer
 			// This will use the addSinger server action with eventId and form data
-			console.log('Submitting signup for event:', eventId, 'with data:', data);
+			// await addSinger(eventId, data);
 
 			// For now, we'll just simulate a successful submission
+			console.log('Simulating signup for event:', eventId, 'with data:', data);
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 
 			setSubmitMessage({

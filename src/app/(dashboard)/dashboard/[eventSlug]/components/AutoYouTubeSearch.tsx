@@ -35,7 +35,6 @@ const fetchYouTubeSearch = async (query: string): Promise<YouTubeResult[]> => {
 	}
 
 	const data = await response.json();
-	console.log('YouTube API response:', data);
 	return data.items || [];
 };
 

@@ -12,9 +12,6 @@ export function YouTubeThumbnail({
 	title,
 	onOpen,
 }: YouTubeThumbnailProps) {
-	// Debug: Log the thumbnail URL to see what we're receiving
-	console.log('YouTubeThumbnail received URL:', thumbnailUrl);
-
 	return (
 		<button
 			onClick={onOpen}

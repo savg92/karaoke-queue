@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -53,6 +54,7 @@ type CreateEventForm = z.infer<typeof createEventSchema>;
 
 export default function CreateEventPage() {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const form = useForm<CreateEventForm>({
@@ -74,6 +76,9 @@ export default function CreateEventPage() {
 			};
 			const result = await createEvent(eventData);
 			if (result.success) {
+				// Invalidate the userEvents query to refresh the dashboard
+				await queryClient.invalidateQueries({ queryKey: ['userEvents'] });
+
 				toast.success('Event created successfully!');
 				router.push(`/dashboard/${result.event?.slug}`);
 			} else {
