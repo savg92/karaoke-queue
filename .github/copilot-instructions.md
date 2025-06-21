@@ -51,9 +51,9 @@ The goal is to build a real-time web application for managing a karaoke night. T
 
 ### File and Component Size Limits
 
-- **Maximum component file size**: 75 lines (HARD LIMIT).
-- **Target component file size**: 50 lines (IDEAL RANGE).
-- **Immediate Action**: Split any file approaching 100 lines. Don't wait.
+- **Maximum component file size**: 125 lines (HARD LIMIT).
+- **Target component file size**: 100 lines (IDEAL RANGE).
+- **Immediate Action**: Split any file approaching 150 lines. Don't wait.
 
 ### Security and Compliance Mandate
 

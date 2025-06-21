@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
 				`q=${encodeURIComponent(query)}&` +
 				`part=snippet&` +
 				// `type=video&` +
-				`maxResults=9&` +
+				`maxResults=10&` +
 				// `videoEmbeddable=true&` +
 				`fields=items(id/videoId,snippet(title,channelTitle,thumbnails/default/url,thumbnails/high/url))`
 		);

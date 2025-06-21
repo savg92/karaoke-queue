@@ -1,6 +1,6 @@
 'use client';
 
-import { DashboardClient } from './components/DashboardClient';
+import { DashboardClient } from './components/layout/DashboardClient';
 import { useState, useEffect } from 'react';
 
 interface DashboardPageProps {
