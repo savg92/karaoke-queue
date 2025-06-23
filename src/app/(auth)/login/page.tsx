@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { toast } from 'sonner';
 
 // Schema for form validation
@@ -65,6 +66,10 @@ export default function LoginPage() {
 	if (emailSent) {
 		return (
 			<div className='flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950'>
+				{/* Theme toggle */}
+				<div className='absolute top-4 right-4'>
+					<ThemeToggle />
+				</div>
 				<Card className='w-full max-w-sm'>
 					<CardHeader className='text-center'>
 						<CardTitle>Check Your Email</CardTitle>
@@ -89,6 +94,10 @@ export default function LoginPage() {
 
 	return (
 		<div className='flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950'>
+			{/* Theme toggle */}
+			<div className='absolute top-4 right-4'>
+				<ThemeToggle />
+			</div>
 			<Card className='w-full max-w-sm'>
 				<CardHeader>
 					<CardTitle>Host Login</CardTitle>

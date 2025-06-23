@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { SignupForm } from './components/SignupForm';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 // This page displays the public sign-up form for a specific karaoke event.
 // Users can sign up to sing at the event by providing their name, song details, and performance type.
@@ -30,6 +31,11 @@ export default async function EventSignupPage({
 
 	return (
 		<div className='container mx-auto px-4 py-8 max-w-2xl'>
+			{/* Theme toggle */}
+			<div className='absolute top-4 right-4'>
+				<ThemeToggle />
+			</div>
+
 			<div className='text-center mb-8'>
 				<h1 className='text-3xl font-bold  mb-2 text-black dark:text-white'>
 					{event.name}

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
 import {
 	Card,
 	CardContent,
@@ -10,11 +11,18 @@ import {
 
 export default function HomePage() {
 	return (
-		<div className='min-h-screen bg-gradient-to-br from-purple-50 to-blue-50'>
+		<div className='min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800'>
+			{/* Header with theme toggle */}
+			<div className='absolute top-4 right-4'>
+				<ThemeToggle />
+			</div>
+
 			<div className='container mx-auto px-4 py-16'>
 				<div className='text-center space-y-6'>
-					<h1 className='text-5xl font-bold text-gray-900'>Karaoke Queue</h1>
-					<p className='text-xl text-gray-600 max-w-2xl mx-auto'>
+					<h1 className='text-5xl font-bold text-gray-900 dark:text-white'>
+						Karaoke Queue
+					</h1>
+					<p className='text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto'>
 						The modern way to manage your karaoke night. Host events, manage
 						queues, and let attendees sign up seamlessly.
 					</p>
