@@ -16,6 +16,26 @@ export function ReactQueryProvider({
 					queries: {
 						staleTime: 60 * 1000, // 1 minute
 						refetchOnWindowFocus: false,
+						refetchOnReconnect: true,
+						retry: (failureCount, error) => {
+							// Don't retry auth errors
+							if (
+								error instanceof Error &&
+								error.message.includes('Unauthorized')
+							) {
+								return false;
+							}
+							// Retry up to 2 times for other errors
+							return failureCount < 2;
+						},
+						retryDelay: (attemptIndex) =>
+							Math.min(1000 * 2 ** attemptIndex, 30000),
+						// Enable background refetching for better UX
+						refetchOnMount: 'always',
+					},
+					mutations: {
+						retry: 1,
+						retryDelay: 1000,
 					},
 				},
 			})

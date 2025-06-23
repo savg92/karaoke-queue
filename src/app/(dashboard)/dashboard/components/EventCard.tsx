@@ -1,9 +1,12 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Users, Settings } from 'lucide-react';
-import Link from 'next/link';
+import { Users, Settings, Loader2 } from 'lucide-react';
 import { ShareActions } from '@/components/ui/ShareActions';
 import { EventCardHeader } from './EventCardHeader';
+import { useNavigationFeedback } from '../hooks/useNavigationFeedback';
+import { useShareEvent } from '../hooks/useShareEvent';
 
 interface EventCardProps {
 	event: {
@@ -13,22 +16,25 @@ interface EventCardProps {
 		date: Date;
 	};
 	signupCount: number;
-	onShare: (slug: string, name: string) => void;
-	onCopy: (url: string) => void;
 }
 
-export function EventCard({
-	event,
-	signupCount,
-	onShare,
-	onCopy,
-}: EventCardProps) {
-	const eventUrl = `${event.slug}`;
-	const handleCopy = () => onCopy(eventUrl);
-	const handleShare = () => onShare(event.slug, event.name);
+export function EventCard({ event, signupCount }: EventCardProps) {
+	const { isNavigating, navigateToEvent } = useNavigationFeedback({
+		eventId: event.id,
+		eventName: event.name,
+	});
+	const { handleShareEvent, copyToClipboard } = useShareEvent();
+
+	const handleCopy = () => copyToClipboard(event.slug);
+	const handleShare = () => handleShareEvent(event.slug, event.name);
+
+	const handleManageClick = async (e: React.MouseEvent) => {
+		e.preventDefault();
+		await navigateToEvent(event.slug);
+	};
 
 	return (
-		<Card className='hover:shadow-md transition-shadow'>
+		<Card className='hover:shadow-lg transition-all duration-200 hover:scale-[1.02]'>
 			<CardHeader>
 				<EventCardHeader
 					name={event.name}
@@ -46,13 +52,21 @@ export function EventCard({
 					{signupCount} signups
 				</div>
 				<Button
-					asChild
-					className='w-full'
+					className='w-full transition-all duration-200 hover:shadow-md'
+					onClick={handleManageClick}
+					disabled={isNavigating}
 				>
-					<Link href={`/dashboard/${event.slug}`}>
-						<Settings className='mr-2 h-4 w-4' />
-						Manage Queue
-					</Link>
+					{isNavigating ? (
+						<>
+							<Loader2 className='mr-2 h-4 w-4 animate-spin' />
+							Loading...
+						</>
+					) : (
+						<>
+							<Settings className='mr-2 h-4 w-4' />
+							Manage Queue
+						</>
+					)}
 				</Button>
 			</CardContent>
 		</Card>

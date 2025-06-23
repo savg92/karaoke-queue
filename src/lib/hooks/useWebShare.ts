@@ -38,5 +38,20 @@ export function useWebShare() {
 		}
 	};
 
-	return { share, copyToClipboard };
+	const shareOnly = async (data: ShareData) => {
+		if (navigator.share) {
+			try {
+				await navigator.share(data);
+				toast.success('Shared successfully!');
+			} catch (error) {
+				if (error instanceof Error && error.name !== 'AbortError') {
+					toast.error('Failed to share. Please try again.');
+				}
+			}
+		} else {
+			toast.info('Web Share not available. Use the copy button instead.');
+		}
+	};
+
+	return { share, copyToClipboard, shareOnly };
 }

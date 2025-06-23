@@ -9,7 +9,6 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 import { useEventSorting } from './hooks/useEventSorting';
-import { useShareEvent } from './hooks/useShareEvent';
 import { SortControls } from './components/SortControls';
 import { EventCard } from './components/EventCard';
 import { EmptyState } from './components/EmptyState';
@@ -22,18 +21,25 @@ export default function DashboardPage() {
 
 	const { sortBy, setSortBy, sortDirection, setSortDirection, sortedEvents } =
 		useEventSorting(data);
-	const { handleShareEvent, copyToClipboard } = useShareEvent();
 
-	if (isLoading) return <CardGridLoading />;
-	if (isError || !data)
+	// Render the error state only if there's an error and we're not loading
+	if (isError && !isLoading) {
 		return (
 			<ErrorState description='Could not load your events. Please try again later.' />
 		);
-	if (sortedEvents.length === 0) return <EmptyState />;
+	}
+
+	// Show empty state only when we have data but no events
+	const showEmptyState = !isLoading && data && sortedEvents.length === 0;
+
+	if (showEmptyState) {
+		return <EmptyState />;
+	}
 
 	return (
 		<div className='container mx-auto py-8'>
 			<div className='space-y-6'>
+				{/* Header - always visible */}
 				<div className='flex justify-between items-center'>
 					<div>
 						<h1 className='text-3xl font-bold'>Dashboard</h1>
@@ -50,24 +56,29 @@ export default function DashboardPage() {
 				</div>
 
 				<div className='space-y-4'>
+					{/* Sort Controls - always visible but disabled during loading */}
 					<SortControls
 						sortBy={sortBy}
 						setSortBy={setSortBy}
 						sortDirection={sortDirection}
 						setSortDirection={setSortDirection}
+						disabled={isLoading}
 					/>
 
-					<div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-						{sortedEvents.map((event) => (
-							<EventCard
-								key={event.id}
-								event={event}
-								signupCount={data.eventCounts[event.id] || 0}
-								onShare={handleShareEvent}
-								onCopy={copyToClipboard}
-							/>
-						))}
-					</div>
+					{/* Content Area */}
+					{isLoading ? (
+						<CardGridLoading count={6} />
+					) : (
+						<div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+							{sortedEvents.map((event) => (
+								<EventCard
+									key={event.id}
+									event={event}
+									signupCount={data?.eventCounts[event.id] || 0}
+								/>
+							))}
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

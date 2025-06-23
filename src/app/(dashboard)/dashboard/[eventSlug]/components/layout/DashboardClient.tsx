@@ -3,7 +3,14 @@
 import { useDashboard } from '../../hooks/useDashboard';
 import { DashboardLoadingState } from './DashboardLoadingState';
 import { DashboardErrorState } from './DashboardErrorState';
-import { DashboardContent } from './DashboardContent';
+import { Suspense, lazy } from 'react';
+
+// Lazy load the heavy dashboard content
+const DashboardContent = lazy(() =>
+	import('./DashboardContent').then((module) => ({
+		default: module.DashboardContent,
+	}))
+);
 
 interface DashboardClientProps {
 	eventSlug: string;
@@ -19,7 +26,6 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 		handleUpdateStatus,
 		handleRemoveSignup,
 		handleReorderSignups,
-		handleShareEvent,
 		refetch,
 		refetchAll,
 	} = useDashboard(eventSlug);
@@ -48,17 +54,18 @@ export function DashboardClient({ eventSlug }: DashboardClientProps) {
 	const { event, signups } = data;
 
 	return (
-		<DashboardContent
-			event={event}
-			signups={signups}
-			allSignups={allSignups}
-			isLoadingAttendees={isLoadingAttendees}
-			eventSlug={eventSlug}
-			onUpdateStatus={handleUpdateStatus}
-			onRemoveSignup={handleRemoveSignup}
-			onReorderSignups={handleReorderSignups}
-			onShareEvent={handleShareEvent}
-			onRefetchAll={refetchAll}
-		/>
+		<Suspense fallback={<DashboardLoadingState />}>
+			<DashboardContent
+				event={event}
+				signups={signups}
+				allSignups={allSignups}
+				isLoadingAttendees={isLoadingAttendees}
+				onUpdateStatus={handleUpdateStatus}
+				onRemoveSignup={handleRemoveSignup}
+				onReorderSignups={handleReorderSignups}
+				onRefetchAll={refetchAll}
+				eventSlug={eventSlug}
+			/>
+		</Suspense>
 	);
 }

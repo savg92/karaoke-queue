@@ -2,12 +2,12 @@ import { prisma } from '@/lib/prisma';
 import { SignupStatus } from '@prisma/client';
 
 /**
- * Recalculates queue positions for QUEUED signups in an event.
+ * Recalculates queue positions for QUEUED signups in an event using batch operations.
  * Only QUEUED signups should have positions. PERFORMING, COMPLETE, and CANCELLED should have position 0.
  */
 export async function recalculateEventQueuePositions(eventId: string) {
 	await prisma.$transaction(async (tx) => {
-		// First, set all non-QUEUED signups to position 0
+		// First, set all non-QUEUED signups to position 0 in a single batch operation
 		await tx.signup.updateMany({
 			where: {
 				eventId,
@@ -27,15 +27,22 @@ export async function recalculateEventQueuePositions(eventId: string) {
 			orderBy: {
 				createdAt: 'asc', // Maintain fairness by creation order
 			},
+			select: {
+				id: true, // Only select what we need
+			},
 		});
 
-		// Update each QUEUED signup with new sequential positions
-		for (let i = 0; i < queuedSignups.length; i++) {
-			await tx.signup.update({
-				where: { id: queuedSignups[i].id },
-				data: { position: i + 1 },
-			});
-		}
+		// Use a single batch operation to update all positions
+		// Build the update operations
+		const updateOperations = queuedSignups.map((signup, index) =>
+			tx.signup.update({
+				where: { id: signup.id },
+				data: { position: index + 1 },
+			})
+		);
+
+		// Execute all updates in parallel within the transaction
+		await Promise.all(updateOperations);
 	});
 }
 
@@ -43,18 +50,15 @@ export async function recalculateEventQueuePositions(eventId: string) {
  * Gets the next available queue position for a signup
  */
 export async function getNextQueuePosition(eventId: string): Promise<number> {
-	const maxPosition = await prisma.signup.findFirst({
+	const result = await prisma.signup.aggregate({
 		where: {
 			eventId,
 			status: SignupStatus.QUEUED,
 		},
-		orderBy: {
-			position: 'desc',
-		},
-		select: {
+		_max: {
 			position: true,
 		},
 	});
 
-	return (maxPosition?.position || 0) + 1;
+	return (result._max.position || 0) + 1;
 }

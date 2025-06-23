@@ -11,7 +11,7 @@ interface CardGridLoadingProps {
  * Can be used across any feature that displays cards in a grid layout
  */
 export function CardGridLoading({
-	count = 3,
+	count = 6,
 	className,
 }: CardGridLoadingProps) {
 	return (

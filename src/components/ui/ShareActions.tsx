@@ -5,6 +5,7 @@ interface ShareActionsProps {
 	onCopy: () => void;
 	onShare: () => void;
 	className?: string;
+	showText?: boolean;
 }
 
 /**
@@ -15,26 +16,29 @@ export function ShareActions({
 	onCopy,
 	onShare,
 	className,
+	showText = false,
 }: ShareActionsProps) {
 	return (
-		<div className={`flex gap-1 ${className || ''}`}>
+		<div className={`flex gap-2 ${className || ''}`}>
 			<Button
-				variant='ghost'
-				size='sm'
+				variant={showText ? 'outline' : 'ghost'}
+				size={showText ? 'default' : 'sm'}
 				onClick={onCopy}
-				className='h-8 w-8 p-0'
+				className={!showText ? 'h-8 w-8 p-0' : ''}
 				title='Copy link'
 			>
-				<Copy className='h-4 w-4' />
+				<Copy className={`h-4 w-4 ${showText ? 'mr-2' : ''}`} />
+				{showText && 'Copy Link'}
 			</Button>
 			<Button
-				variant='ghost'
-				size='sm'
+				variant={showText ? 'outline' : 'ghost'}
+				size={showText ? 'default' : 'sm'}
 				onClick={onShare}
-				className='h-8 w-8 p-0'
+				className={!showText ? 'h-8 w-8 p-0' : ''}
 				title='Share'
 			>
-				<Share2 className='h-4 w-4' />
+				<Share2 className={`h-4 w-4 ${showText ? 'mr-2' : ''}`} />
+				{showText && 'Share Event'}
 			</Button>
 		</div>
 	);

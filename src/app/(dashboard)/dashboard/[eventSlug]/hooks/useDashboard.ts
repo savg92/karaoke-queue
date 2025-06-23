@@ -1,11 +1,10 @@
 import { toast } from 'sonner';
-import { SignupStatus } from '@prisma/client';
 import { useEventQueue, useAllEventSignups } from './useEventQueries';
 import { useUpdateSignupStatus } from './useUpdateSignupStatus';
 import { useRemoveSignup } from './useRemoveSignup';
 import { useReorderSignups } from './useReorderSignups';
-import { useRealtimeQueue } from './useRealtimeQueue';
-import type { QueueItem } from '../types';
+import { useRealtimeQueue, useRealtimeDebugger } from './useRealtimeQueue';
+import type { QueueItem, SignupStatus } from '../types';
 
 export function useDashboard(eventSlug: string) {
 	const { data, isLoading, error, refetch } = useEventQueue(eventSlug);
@@ -19,8 +18,11 @@ export function useDashboard(eventSlug: string) {
 	const removeSignupMutation = useRemoveSignup(eventSlug);
 	const reorderSignupsMutation = useReorderSignups(eventSlug);
 
-	// Enable real-time updates
-	useRealtimeQueue(eventSlug);
+	// Enable real-time updates and debugging only after we have event data
+	// This prevents the error where realtime tries to access query data before it's loaded
+	const hasEventData = Boolean(data?.event?.id);
+	useRealtimeQueue(eventSlug, hasEventData);
+	useRealtimeDebugger(eventSlug);
 
 	const handleUpdateStatus = (signupId: string, status: SignupStatus) => {
 		updateStatusMutation.mutate({ signupId, status });

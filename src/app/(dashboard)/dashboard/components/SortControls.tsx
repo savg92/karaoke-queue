@@ -12,6 +12,7 @@ interface SortControlsProps {
 	setSortBy: (value: SortOption) => void;
 	sortDirection: SortDirection;
 	setSortDirection: (value: SortDirection) => void;
+	disabled?: boolean;
 }
 
 export function SortControls({
@@ -19,6 +20,7 @@ export function SortControls({
 	setSortBy,
 	sortDirection,
 	setSortDirection,
+	disabled = false,
 }: SortControlsProps) {
 	return (
 		<div className='flex gap-4 items-center'>
@@ -28,6 +30,7 @@ export function SortControls({
 			<Select
 				value={sortBy}
 				onValueChange={setSortBy}
+				disabled={disabled}
 			>
 				<SelectTrigger className='w-[140px]'>
 					<SelectValue />
@@ -42,6 +45,7 @@ export function SortControls({
 			<Select
 				value={sortDirection}
 				onValueChange={setSortDirection}
+				disabled={disabled}
 			>
 				<SelectTrigger className='w-[120px]'>
 					<SelectValue />

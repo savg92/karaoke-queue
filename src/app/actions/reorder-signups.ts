@@ -40,29 +40,11 @@ export async function reorderSignups(
 			throw new Error('Event not found or access denied');
 		}
 
-		// console.log('Reordering signups:', signupUpdates);
-		// console.log('Event ID:', event.id);
-		// console.log('Profile ID:', profile.id);
-
-		// Update positions in a transaction
-		// Use a two-step approach to avoid position conflicts during reordering
+		// Optimize reordering with batch operations
 		await prisma.$transaction(async (tx) => {
-			// Step 1: Set all positions to negative values to avoid conflicts
-			for (let i = 0; i < signupUpdates.length; i++) {
-				await tx.signup.update({
-					where: {
-						id: signupUpdates[i].id,
-						eventId: event.id,
-					},
-					data: {
-						position: -(i + 1), // Use negative positions temporarily
-					},
-				});
-			}
-
-			// Step 2: Set the final positions
-			for (const update of signupUpdates) {
-				await tx.signup.update({
+			// Create all update operations and execute them in parallel
+			const updateOperations = signupUpdates.map((update) =>
+				tx.signup.update({
 					where: {
 						id: update.id,
 						eventId: event.id,
@@ -70,8 +52,11 @@ export async function reorderSignups(
 					data: {
 						position: update.position,
 					},
-				});
-			}
+				})
+			);
+
+			// Execute all updates in parallel within the transaction
+			await Promise.all(updateOperations);
 		});
 
 		console.log('Successfully updated signup positions');

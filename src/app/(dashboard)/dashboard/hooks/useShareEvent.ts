@@ -1,19 +1,16 @@
 import { useWebShare } from '@/lib/hooks/useWebShare';
 
 export function useShareEvent() {
-	const { share, copyToClipboard } = useWebShare();
+	const { shareOnly, copyToClipboard } = useWebShare();
 
 	const handleShareEvent = async (eventSlug: string, eventName: string) => {
 		const signupUrl = `${window.location.origin}/event/${eventSlug}`;
 
-		await share(
-			{
-				title: `Join ${eventName} - Karaoke Night`,
-				text: `Sign up to sing at ${eventName}!`,
-				url: signupUrl,
-			},
-			'Signup link copied to clipboard!'
-		);
+		await shareOnly({
+			title: `Join ${eventName} - Karaoke Night`,
+			text: `Sign up to sing at ${eventName}!`,
+			url: signupUrl,
+		});
 	};
 
 	const copyEventToClipboard = (eventSlug: string) => {

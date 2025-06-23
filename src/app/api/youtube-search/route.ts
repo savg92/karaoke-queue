@@ -69,9 +69,7 @@ export async function GET(request: NextRequest) {
 				`key=${YOUTUBE_API_KEY}&` +
 				`q=${encodeURIComponent(query)}&` +
 				`part=snippet&` +
-				// `type=video&` +
 				`maxResults=10&` +
-				// `videoEmbeddable=true&` +
 				`fields=items(id/videoId,snippet(title,channelTitle,thumbnails/default/url,thumbnails/high/url))`
 		);
 

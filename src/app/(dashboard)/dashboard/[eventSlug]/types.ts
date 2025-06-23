@@ -1,10 +1,42 @@
-import {
-	Event,
-	Signup,
-	Profile,
-	PerformanceType,
-	SignupStatus,
-} from '@prisma/client';
+// Define types manually to work around Prisma import issues
+export type PerformanceType = 'SOLO' | 'DUET' | 'GROUP';
+export type SignupStatus = 'QUEUED' | 'PERFORMING' | 'COMPLETE' | 'CANCELLED';
+
+export type Event = {
+	id: string;
+	name: string;
+	slug: string;
+	description: string | null;
+	date: Date;
+	hostId: string;
+	createdAt: Date;
+	updatedAt: Date;
+};
+
+export type Profile = {
+	id: string;
+	email: string;
+	givenName: string | null;
+	familyName: string | null;
+	picture: string | null;
+	createdAt: Date;
+	updatedAt: Date;
+};
+
+export type Signup = {
+	id: string;
+	singerName: string;
+	songTitle: string;
+	artist: string;
+	performanceType: PerformanceType;
+	notes: string | null;
+	position: number;
+	status: SignupStatus;
+	performingAt: Date | null;
+	eventId: string;
+	createdAt: Date;
+	updatedAt: Date;
+};
 
 export type EventWithQueue = Event & {
 	host: Profile;

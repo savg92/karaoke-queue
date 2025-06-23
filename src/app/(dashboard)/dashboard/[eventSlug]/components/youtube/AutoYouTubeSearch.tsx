@@ -6,8 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { YouTubeCard } from './YouTubeCard';
-import { SignupStatus } from '@prisma/client';
-import type { QueueItem } from '../../types';
+import type { QueueItem, SignupStatus } from '../../types';
 import type { YouTubeResult } from './youtube.types';
 
 interface AutoYouTubeSearchProps {
@@ -45,7 +44,7 @@ export function AutoYouTubeSearch({
 	onUpdateStatus,
 	currentPerformer,
 }: AutoYouTubeSearchProps) {
-	const searchQuery = `"${artist}" "${songTitle}" karaoke "Sing King"`;
+	const searchQuery = `${artist} ${songTitle} karaoke Sing King`;
 	const [showAll, setShowAll] = useState(false);
 
 	// Use React Query to automatically fetch results
@@ -59,6 +58,8 @@ export function AutoYouTubeSearch({
 		staleTime: 5 * 60 * 1000, // 5 minutes
 		gcTime: 10 * 60 * 1000, // 10 minutes
 	});
+
+	console.log('YouTube search results:', results);
 
 	if (isLoading) {
 		return (
@@ -107,7 +108,7 @@ export function AutoYouTubeSearch({
 		);
 	}
 
-	const displayedResults = showAll ? results.slice(0, 10) : results.slice(0, 4);
+	const displayedResults = showAll ? results.slice(0, 9) : results.slice(0, 3);
 	const hasMoreResults = results.length > 3;
 
 	// Ensure displayedResults is always an array and filter out any invalid items

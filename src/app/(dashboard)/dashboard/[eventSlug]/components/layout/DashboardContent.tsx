@@ -1,5 +1,4 @@
-import { SignupStatus } from '@prisma/client';
-import type { QueueItem, EventDetails } from '../../types';
+import type { QueueItem, EventDetails, SignupStatus } from '../../types';
 import { EventHeader } from './EventHeader';
 import { EventStats } from './EventStats';
 import { UpNextCard } from './UpNextCard';
@@ -15,7 +14,6 @@ interface DashboardContentProps {
 	onUpdateStatus: (signupId: string, status: SignupStatus) => void;
 	onRemoveSignup: (signupId: string) => void;
 	onReorderSignups: (reorderedSignups: QueueItem[]) => void;
-	onShareEvent: () => void;
 	onRefetchAll: () => void;
 }
 
@@ -28,20 +26,19 @@ export function DashboardContent({
 	onUpdateStatus,
 	onRemoveSignup,
 	onReorderSignups,
-	onShareEvent,
 	onRefetchAll,
 }: DashboardContentProps) {
 	const queuedCount = signups.filter(
-		(s) => s.status === SignupStatus.QUEUED
+		(s) => s.status === 'QUEUED'
 	).length;
 	const completedCount = signups.filter(
-		(s) => s.status === SignupStatus.COMPLETE
+		(s) => s.status === 'COMPLETE'
 	).length;
 	const performingSinger = signups.find(
-		(s) => s.status === SignupStatus.PERFORMING
+		(s) => s.status === 'PERFORMING'
 	);
 	const upNextSinger = signups.find(
-		(s) => s.status === SignupStatus.QUEUED && s.position === 1
+		(s) => s.status === 'QUEUED' && s.position === 1
 	);
 
 	return (
@@ -51,7 +48,6 @@ export function DashboardContent({
 					eventName={event.name}
 					eventDate={new Date(event.date)}
 					eventSlug={eventSlug}
-					onShare={onShareEvent}
 				/>
 
 				<EventStats
