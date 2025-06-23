@@ -41,8 +41,8 @@ export function useRealtimeDebug(eventSlug: string) {
 					}
 				}
 			)
-			.subscribe((_status) => {
-				// console.log(`🔗 Subscription status: ${_status}`);
+			.subscribe(() => { //add status callback
+				// console.log(`🔗 Subscription status: ${status}`);
 			});
 
 		// Test the connection
