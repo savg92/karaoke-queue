@@ -35,6 +35,25 @@ const nextConfig: NextConfig = {
 			// Client-side optimizations
 			config.resolve.fallback = { fs: false, net: false, tls: false };
 		}
+
+		// Enhanced LightningCSS support for Vercel deployment
+		config.externals = config.externals || [];
+		config.externals.push({
+			lightningcss: 'lightningcss',
+			'@parcel/watcher': '@parcel/watcher',
+		});
+
+		// Resolve native modules properly
+		config.resolve.alias = {
+			...config.resolve.alias,
+		};
+
+		// Help webpack handle native binaries
+		config.module.rules.push({
+			test: /\.node$/,
+			loader: 'node-loader',
+		});
+
 		return config;
 	},
 };

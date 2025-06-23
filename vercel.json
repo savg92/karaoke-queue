@@ -1,0 +1,21 @@
+{
+    "buildCommand": "bun run build",
+    "framework": "nextjs",
+    "installCommand": "bun install",
+    "env": {
+        "NEXT_TELEMETRY_DISABLED": "1"
+    },
+    "build": {
+        "env": {
+            "NPM_CONFIG_PLATFORM": "linux",
+            "NPM_CONFIG_ARCH": "x64",
+            "FORCE_COLOR": "1",
+            "NODE_OPTIONS": "--max-old-space-size=4096"
+        }
+    },
+    "functions": {
+        "src/app/**/*.{js,ts,jsx,tsx}": {
+            "runtime": "nodejs20.x"
+        }
+    }
+}
