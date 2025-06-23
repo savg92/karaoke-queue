@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+	// Disable telemetry
+	telemetry: false,
 	images: {
 		remotePatterns: [
 			{
@@ -14,6 +16,8 @@ const nextConfig: NextConfig = {
 	// Performance optimizations
 	compress: true,
 	poweredByHeader: false,
+	// External packages that should be handled by the server
+	serverExternalPackages: ['@prisma/client'],
 	// Enable experimental features for better performance
 	experimental: {
 		optimizePackageImports: [

@@ -1,16 +1,18 @@
 {
-    "buildCommand": "bun run build",
+    "buildCommand": "bunx prisma generate && bun run build",
     "framework": "nextjs",
     "installCommand": "bun install",
     "env": {
-        "NEXT_TELEMETRY_DISABLED": "1"
+        "NEXT_TELEMETRY_DISABLED": "1",
+        "SKIP_ENV_VALIDATION": "1"
     },
     "build": {
         "env": {
             "NPM_CONFIG_PLATFORM": "linux",
             "NPM_CONFIG_ARCH": "x64",
             "FORCE_COLOR": "1",
-            "NODE_OPTIONS": "--max-old-space-size=4096"
+            "NODE_OPTIONS": "--max-old-space-size=4096",
+            "PRISMA_GENERATE_SKIP_AUTOINSTALL": "false"
         }
     }
 }
