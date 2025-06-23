@@ -14,9 +14,9 @@ export function useReorderSignups(eventSlug: string) {
 				id: signup.id,
 				position: signup.position,
 			}));
-			console.log('Calling reorderSignups with:', signupUpdates);
+			// console.log('Calling reorderSignups with:', signupUpdates);
 			const result = await reorderSignups(eventSlug, signupUpdates);
-			console.log('Reorder result:', result);
+			// console.log('Reorder result:', result);
 			return result;
 		},
 		onMutate: async (newSignups) => {

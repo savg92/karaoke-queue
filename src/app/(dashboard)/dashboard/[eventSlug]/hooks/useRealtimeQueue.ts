@@ -137,12 +137,13 @@ export function useRealtimeDebugger(eventSlug: string) {
 			if (
 				event.type === 'updated' &&
 				event.query.queryKey.includes(eventSlug)
-			) {
-				console.log(
-					'Query cache updated:',
-					event.query.queryKey,
-					event.query.state
-				);
+			) 
+			{
+				// console.log(
+				// 	'Query cache updated:',
+				// 	event.query.queryKey,
+				// 	event.query.state
+				// );
 			}
 		});
 

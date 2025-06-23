@@ -59,8 +59,6 @@ export function AutoYouTubeSearch({
 		gcTime: 10 * 60 * 1000, // 10 minutes
 	});
 
-	console.log('YouTube search results:', results);
-
 	if (isLoading) {
 		return (
 			<div className='space-y-3'>
