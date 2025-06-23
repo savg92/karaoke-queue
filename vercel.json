@@ -12,10 +12,5 @@
             "FORCE_COLOR": "1",
             "NODE_OPTIONS": "--max-old-space-size=4096"
         }
-    },
-    "functions": {
-        "src/app/**/*.{js,ts,jsx,tsx}": {
-            "runtime": "nodejs20.x"
-        }
     }
 }
