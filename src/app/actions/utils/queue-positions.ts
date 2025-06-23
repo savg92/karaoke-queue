@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
  * Only QUEUED signups should have positions. PERFORMING, COMPLETE, and CANCELLED should have position 0.
  */
 export async function recalculateEventQueuePositions(eventId: string) {
-	await prisma.$transaction(async (tx: typeof prisma) => {
+	await prisma.$transaction(async (tx) => {
 		// First, set all non-QUEUED signups to position 0 in a single batch operation
 		await tx.signup.updateMany({
 			where: {

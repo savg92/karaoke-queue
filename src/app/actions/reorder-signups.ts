@@ -41,7 +41,7 @@ export async function reorderSignups(
 		}
 
 		// Optimize reordering with batch operations
-		await prisma.$transaction(async (tx: typeof prisma) => {
+		await prisma.$transaction(async (tx) => {
 			// Create all update operations and execute them in parallel
 			const updateOperations = signupUpdates.map((update) =>
 				tx.signup.update({
