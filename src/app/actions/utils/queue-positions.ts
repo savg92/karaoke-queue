@@ -33,11 +33,12 @@ export async function recalculateEventQueuePositions(eventId: string) {
 
 		// Use a single batch operation to update all positions
 		// Build the update operations
-		const updateOperations = queuedSignups.map((signup: { id: string }, index: number) =>
-			tx.signup.update({
-				where: { id: signup.id },
-				data: { position: index + 1 },
-			})
+		const updateOperations = queuedSignups.map(
+			(signup: { id: string }, index: number) =>
+				tx.signup.update({
+					where: { id: signup.id },
+					data: { position: index + 1 },
+				})
 		);
 
 		// Execute all updates in parallel within the transaction

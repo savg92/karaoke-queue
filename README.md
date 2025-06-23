@@ -1,36 +1,202 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Karaoke Queue
 
-## Getting Started
+A real-time web application for managing karaoke nights with a secure host dashboard and public attendee sign-up form. Built with modern technologies for fast, type-safe, and responsive performance.
 
-First, run the development server:
+## 🎤 Features
+
+- **Host Dashboard**: Secure interface for managing karaoke events and queue
+- **Real-time Updates**: Live queue updates using Supabase Realtime
+- **Public Sign-up**: Easy-to-use form for attendees to join the queue
+- **YouTube Integration**: Search and display karaoke tracks with prioritized results
+- **Queue Management**: Fair ordering algorithm with drag-and-drop reordering
+- **Event Sharing**: QR codes and shareable links for easy access
+- **Mobile Responsive**: Optimized for all device sizes
+
+## 🚀 Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Package Manager**: Bun
+- **Database**: Supabase (PostgreSQL)
+- **ORM**: Prisma
+- **Authentication**: Supabase Auth
+- **Real-time**: Supabase Realtime Subscriptions
+- **UI**: Tailwind CSS with shadcn/ui components
+- **State Management**: TanStack Query + Zustand
+- **Testing**: Vitest (Unit) + Playwright (E2E)
+- **Validation**: Zod
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Bun package manager
+- Supabase account and project
+
+### Installation
+
+1. Clone the repository:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+git clone <your-repo-url>
+cd karaoke-queue
+```
+
+2. Install dependencies:
+
+```bash
+bun install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your Supabase credentials:
+
+```
+DATABASE_URL="your-supabase-connection-string"
+DIRECT_URL="your-supabase-direct-connection-string"
+NEXT_PUBLIC_SUPABASE_URL="your-supabase-url"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
+YOUTUBE_API_KEY="your-youtube-api-key" # Optional
+```
+
+4. Set up the database:
+
+```bash
+bunx prisma generate
+bunx prisma db push
+```
+
+5. Run the development server:
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+├── src/
+│   ├── app/                    # Next.js app router pages
+│   │   ├── (auth)/            # Authentication routes
+│   │   ├── (dashboard)/       # Host dashboard routes
+│   │   ├── actions/           # Server actions
+│   │   │   ├── types/         # Action type definitions
+│   │   │   └── utils/         # Action utilities
+│   │   ├── api/               # API routes (YouTube search)
+│   │   ├── auth/              # Auth callback routes
+│   │   ├── dashboard-simple/  # Simplified dashboard view
+│   │   └── event/             # Public event pages
+│   ├── components/            # Reusable UI components
+│   │   └── ui/               # shadcn/ui components
+│   ├── lib/                  # Utilities and configurations
+│   │   ├── supabase/         # Supabase client setup
+│   │   ├── hooks/            # Custom React hooks
+│   │   └── validators/       # Zod schemas
+│   └── middleware.ts         # Next.js middleware
+├── prisma/                   # Database schema and migrations
+├── tests/                    # Test files
+├── scripts/                  # Build and utility scripts
+└── public/                   # Static assets
+```
 
-## Learn More
+## 🎯 Usage
 
-To learn more about Next.js, take a look at the following resources:
+### For Hosts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Sign In**: Go to `/login` and enter your email to receive a magic link
+2. **Access Dashboard**: Click the magic link in your email to authenticate
+3. **Create Event**: Use the dashboard to create a new karaoke event
+4. **Share Event**: Generate QR codes or copy shareable links
+5. **Manage Queue**: View, reorder, and update performer status in real-time
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### For Attendees
 
-## Deploy on Vercel
+1. **Join Event**: Scan QR code or visit the event URL
+2. **Sign Up**: Fill out the simple form with your song choice
+3. **Wait**: View your position in the queue with real-time updates
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧪 Testing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+# Unit tests
+bun test
+
+# E2E tests
+bun test:e2e
+
+# Run all tests
+bun test:all
+```
+
+## 🏗️ Building
+
+Create a production build:
+
+```bash
+bun run build
+```
+
+Start the production server:
+
+```bash
+bun start
+```
+
+## 🚢 Deployment
+
+### Vercel (Recommended)
+
+1. Connect your repository to Vercel
+2. Configure environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Other Platforms
+
+The application can be deployed to any platform that supports Next.js:
+
+- Railway
+- Render
+- DigitalOcean App Platform
+- AWS Amplify
+
+## 🔧 Configuration
+
+### Environment Variables
+
+- `DATABASE_URL`: Supabase connection string for Prisma
+- `DIRECT_URL`: Supabase direct connection (for migrations)
+- `NEXT_PUBLIC_SUPABASE_URL`: Public Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonymous key
+- `YOUTUBE_API_KEY`: YouTube Data API v3 key (optional)
+
+### Database Setup
+
+The application uses Prisma with Supabase PostgreSQL. Key tables:
+
+- `Profile`: User accounts (linked to Supabase Auth)
+- `Event`: Karaoke events created by hosts
+- `Signup`: Individual sign-ups in the queue
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes following the coding guidelines
+4. Run tests and ensure build passes
+5. Submit a pull request
+
+## 📝 License
+
+This project is licensed under the MIT License.
