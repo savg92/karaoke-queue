@@ -30,27 +30,29 @@ export default async function EventSignupPage({
 	}
 
 	return (
-		<div className='container mx-auto px-4 py-8 max-w-2xl'>
-			{/* Theme toggle */}
-			<div className='absolute top-4 right-4'>
-				<ThemeToggle />
-			</div>
+		<div className='min-h-screen bg-background'>
+			<div className='container relative mx-auto max-w-2xl px-4 py-8'>
+				{/* Theme toggle */}
+				<div className='absolute right-4 top-4'>
+					<ThemeToggle />
+				</div>
 
-			<div className='text-center mb-8'>
-				<h1 className='text-3xl font-bold  mb-2 text-black dark:text-white'>
-					{event.name}
-				</h1>
-				{event.description && (
-					<p className='text-gray-600 dark:text-gray-400 mb-4'>
-						{event.description}
+				<div className='mb-8 pt-12 text-center'>
+					<h1 className='text-3xl font-bold text-foreground mb-2'>
+						{event.name}
+					</h1>
+					{event.description && (
+						<p className='text-muted-foreground mb-4'>
+							{event.description}
+						</p>
+					)}
+					<p className='text-sm text-muted-foreground'>
+						Event date: {new Date(event.date).toLocaleString()}
 					</p>
-				)}
-				<p className='text-sm text-gray-500 dark:text-gray-500'>
-					Event date: {new Date(event.date).toLocaleString()}
-				</p>
-			</div>
+				</div>
 
-			<SignupForm eventId={event.id} />
+				<SignupForm eventId={event.id} />
+			</div>
 		</div>
 	);
 }

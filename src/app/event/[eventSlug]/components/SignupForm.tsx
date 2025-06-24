@@ -57,10 +57,10 @@ export function SignupForm({ eventId, onSuccess }: SignupFormProps) {
 
 						{submitMessage && (
 							<div
-								className={`p-4 rounded-md text-sm ${
+								className={`rounded-md border p-4 text-sm ${
 									submitMessage.type === 'success'
-										? 'bg-green-50 text-green-700 border border-green-200'
-										: 'bg-red-50 text-red-700 border border-red-200'
+										? 'border-green-200 bg-green-50 text-green-800 dark:border-green-600/50 dark:bg-green-950/50 dark:text-green-300'
+										: 'border-red-200 bg-red-50 text-red-800 dark:border-red-600/50 dark:bg-red-950/50 dark:text-red-300'
 								}`}
 							>
 								{submitMessage.text}
