@@ -10,16 +10,17 @@ import { buildSingerName } from './utils/singer-name';
 import { getCurrentQueue } from './utils/queue-data';
 import { createSignup } from './utils/signup-creation';
 import { reorderQueuePositions } from './utils/queue-reorder';
+import { withSecurity } from '@/lib/security/security-wrapper';
 
 /**
  * Server action to add a new singer to the karaoke queue.
  * This function validates the input, calculates the optimal queue position,
  * and creates a new signup record in the database.
  */
-export async function addSinger(
+const addSingerUnsecured = async (
 	eventId: string,
 	formData: FormData
-): Promise<AddSingerResult> {
+): Promise<AddSingerResult> => {
 	try {
 		// Extract and validate form data
 		const rawData = extractFormData(formData);
@@ -44,20 +45,20 @@ export async function addSinger(
 				queuePosition: entry.position,
 			})),
 			singerName
-		);    // Create signup and reorder positions
-    await createSignup(eventId, singerName, validatedData, queuePosition);
-    await reorderQueuePositions(eventId);
-    
-    // Revalidate event pages
-    const event = await prisma.event.findUnique({
-      where: { id: eventId },
-      select: { slug: true },
-    });
-    
-    if (event) {
-      revalidatePath(`/event/${event.slug}`);
-      revalidatePath(`/dashboard/${event.slug}`);
-    }
+		); // Create signup and reorder positions
+		await createSignup(eventId, singerName, validatedData, queuePosition);
+		await reorderQueuePositions(eventId);
+
+		// Revalidate event pages
+		const event = await prisma.event.findUnique({
+			where: { id: eventId },
+			select: { slug: true },
+		});
+
+		if (event) {
+			revalidatePath(`/event/${event.slug}`);
+			revalidatePath(`/dashboard/${event.slug}`);
+		}
 
 		return {
 			success: true,
@@ -71,4 +72,10 @@ export async function addSinger(
 			message: 'An unexpected error occurred. Please try again later.',
 		};
 	}
-}
+};
+
+// Apply security wrapper with rate limiting and injection detection
+export const addSinger = withSecurity(addSingerUnsecured, {
+	rateLimiter: 'signup',
+	checkInjection: true,
+});

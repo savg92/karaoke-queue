@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+	rateLimiters,
+	getClientId,
+	createRateLimitResponse,
+} from '@/lib/security/rate-limit';
+import { AttackDetector } from '@/lib/security/attack-detector';
 
 interface YouTubeSearchItem {
 	id: { videoId: string };
@@ -17,6 +23,33 @@ interface YouTubeSearchResponse {
 }
 
 export async function GET(request: NextRequest) {
+	// Security checks
+	const clientId = getClientId(request);
+	const detector = AttackDetector.getInstance();
+
+	// Check if client is blocked
+	if (await detector.isBlocked(clientId)) {
+		return new Response('Forbidden', { status: 403 });
+	}
+
+	// Apply rate limiting
+	const limit = await rateLimiters.youtube.limit(clientId);
+	if (!limit.success) {
+		await detector.logSecurityEvent({
+			type: 'rate_limit_exceeded',
+			clientId,
+			timestamp: Date.now(),
+			details: { endpoint: 'youtube-search' },
+		});
+		return createRateLimitResponse(limit);
+	}
+
+	// Check for suspicious activity
+	const userAgent = request.headers.get('user-agent') || undefined;
+	if (await detector.checkSuspiciousActivity(clientId, userAgent)) {
+		return new Response('Forbidden', { status: 403 });
+	}
+
 	const { searchParams } = new URL(request.url);
 	const query = searchParams.get('q');
 

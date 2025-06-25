@@ -290,7 +290,7 @@ All core functionality (Phases 1-4) has been successfully implemented, tested, a
 
   - Eliminated N+1 query patterns in position recalculation
   - Implemented batch operations for reordering signups
-  - Optimized queries with `aggregate()` instead of `findFirst()`
+  - Optimized queries with `aggregate()` instead of `findFirst
   - Added parallel execution for multiple database updates
   - Proper indexing strategy in Prisma schema
 
@@ -369,7 +369,7 @@ Route (app)                                 Size  First Load JS
 - **✅ Enhanced Real-time Sync**: Optimistic updates with safety checks, dual-table synchronization
 - **✅ Fixed Drag-and-Drop Reordering**: Only QUEUED signups can be reordered, database persistence
 - **✅ "Sing King" YouTube Prioritization**: Enhanced search with karaoke track prioritization
-- **✅ Inline Attendee Editing**: Host can edit name, song, artist with real-time validation
+- **✅ Inline Attendee Editing**: Host can edit name, song, and artist with real-time validation
 - **✅ Comprehensive Position Rebalancing**: Automatic position updates after all mutations
 
 ### 🧪 **Testing Completed:**
@@ -493,11 +493,11 @@ Route (app)                                 Size  First Load JS
 
 ### 🎨 **UI/UX Polish:**
 
-- [ ] **Visual Enhancements:**
+- **Visual Enhancements:**
 
   - [ ] Custom themes and color schemes
   - [ ] Animated transitions and micro-interactions
-  - [ ] Dark/light mode toggle
+  - [x] Dark/light mode toggle
   - [ ] Customizable dashboard layouts
 
 - [ ] **Advanced Search & Filtering:**
@@ -514,8 +514,23 @@ Route (app)                                 Size  First Load JS
   - [ ] Event access codes/passwords
   - [ ] IP-based access restrictions
   - [ ] Audit logs for all actions
-  - [ ] Rate limiting for API endpoints
-  - [ ] Attack detection and prevention (e.g., brute force, DDoS)
+  - [x] Rate limiting for API endpoints
+  - [x] Attack detection and prevention (e.g., brute force, DDoS)
+
+- [ ] **Role-Based Access Control (RBAC):**
+  - [ ] Role hierarchy system (Super Admin, Admin, Host, Viewer, Guest)
+  - [ ] Granular permissions (create, read, update, delete, manage)
+  - [ ] Event-level role assignments
+  - [ ] Organization-level role management
+  - [ ] Dynamic role switching and delegation
+
+- [ ] **Role Monitoring & Audit:**
+  - [ ] Role assignment tracking and history
+  - [ ] Permission usage analytics
+  - [ ] Unauthorized access attempt logging
+  - [ ] Role escalation detection
+  - [ ] Activity monitoring by role type
+  - [ ] Compliance reporting for role changes
 
 - [ ] **Data & Privacy:**
   - [ ] GDPR compliance features
