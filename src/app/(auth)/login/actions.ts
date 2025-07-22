@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
-import { headers } from 'next/headers';
+import { getBaseUrl } from '@/lib/get-base-url';
 import { type FormState } from '@/app/(auth)/login/definitions';
 
 // Define the schema for the login form using Zod.
@@ -34,9 +34,9 @@ export async function login(
 		};
 	}
 
-	// Get the origin of the request from the headers.
+	// Get the origin of the request using our utility function.
 	// This is needed to construct the redirect URL for the magic link.
-	const origin = (await headers()).get('origin');
+	const origin = await getBaseUrl();
 
 	// Call the Supabase `signInWithOtp` method to send a magic link.
 	// The user will be redirected to the `/auth/callback` route after clicking the link.
@@ -80,8 +80,7 @@ export async function loginWithEmail(
 	}
 
 	try {
-		const headersList = await headers();
-		const origin = headersList.get('origin') || 'http://localhost:3000';
+		const origin = await getBaseUrl();
 
 		const { error } = await supabase.auth.signInWithOtp({
 			email: email,

@@ -179,7 +179,10 @@ The application can be deployed to any platform that supports Next.js:
 - `DIRECT_URL`: Supabase direct connection (for migrations)
 - `NEXT_PUBLIC_SUPABASE_URL`: Public Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonymous key
+- `NEXT_PUBLIC_SITE_URL`: (Optional) Your production domain URL (e.g., `https://your-domain.com`)
 - `YOUTUBE_API_KEY`: YouTube Data API v3 key (optional)
+
+**Note**: The `NEXT_PUBLIC_SITE_URL` variable is used for authentication redirects in production. If not set, the app will attempt to auto-detect the domain from request headers or fall back to Vercel's automatically provided `VERCEL_URL`.
 
 ### Database Setup
 

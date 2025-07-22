@@ -14,7 +14,6 @@ import {
 } from '@/app/actions/rbac';
 import { Permission, UserRole } from '@/lib/rbac/types-fixed';
 import { hasPermission } from '@/lib/rbac/permissions-simple';
-import { createClient } from '@/lib/supabase/client';
 
 /**
  * Hook to get current user's role and permissions
@@ -134,11 +133,15 @@ export function useAllProfiles() {
 	return useQuery({
 		queryKey: ['allProfiles'],
 		queryFn: async () => {
-			const supabase = createClient();
-			const { data, error } = await supabase.from('profiles').select('*');
-			if (error) throw error;
-			return data;
+			const { getAllProfiles } = await import('@/app/actions/get-all-profiles');
+			const result = await getAllProfiles();
+			if (!result.success) {
+				throw new Error(result.error || 'Failed to fetch profiles');
+			}
+			return result.profiles;
 		},
+		staleTime: 30 * 1000, // 30 seconds
+		gcTime: 2 * 60 * 1000, // 2 minutes
 	});
 }
 
@@ -158,13 +161,12 @@ export function useAllProfileRoles() {
 	return useQuery({
 		queryKey: ['allProfileRoles'],
 		queryFn: async () => {
-			const supabase = createClient();
-			const { data, error } = await supabase
-				.from('profiles')
-				.select('id, email, role')
-				.order('role', { ascending: false });
-			if (error) throw error;
-			return data;
+			const { getAllProfiles } = await import('@/app/actions/get-all-profiles');
+			const result = await getAllProfiles();
+			if (!result.success) {
+				throw new Error(result.error || 'Failed to fetch profiles');
+			}
+			return result.profiles;
 		},
 		staleTime: 30 * 1000,
 		gcTime: 2 * 60 * 1000,

@@ -28,7 +28,7 @@ export function RBACDebug() {
 	return (
 		<div className='space-y-4'>
 			{/* Profile Table Role */}
-			<div className='p-4 bg-orange-100 border border-orange-300 rounded'>
+			<div className='p-4 bg-orange-100 border border-orange-300 rounded text-black'>
 				<h3 className='font-semibold'>Profile Table Role</h3>
 				{profileRoleLoading ? (
 					<p>Loading profile.role...</p>
@@ -40,7 +40,7 @@ export function RBACDebug() {
 			</div>
 
 			{/* All Profiles Table (Admin Debug) */}
-			<div className='p-4 bg-yellow-100 border border-yellow-300 rounded'>
+			<div className='p-4 bg-yellow-100 border border-yellow-300 rounded text-black'>
 				<h3 className='font-semibold'>All Profiles (Admin Debug)</h3>
 				{allProfilesLoading ? (
 					<p>Loading all profiles...</p>
@@ -69,7 +69,7 @@ export function RBACDebug() {
 			</div>
 
 			{/* Database Access Test */}
-			<div className='p-4 bg-purple-100 border border-purple-300 rounded'>
+			<div className='p-4 bg-purple-100 border border-purple-300 rounded text-black'>
 				<h3 className='font-semibold'>Database Access Test</h3>
 				{testLoading ? (
 					<p>Testing database access...</p>
@@ -102,7 +102,7 @@ export function RBACDebug() {
 			</div>
 
 			{/* Original RBAC Hook Debug */}
-			<div className='p-4 bg-blue-100 border border-blue-300 rounded'>
+			<div className='p-4 bg-blue-100 border border-blue-300 rounded text-black'>
 				<h3 className='font-semibold'>RBAC Hook Debug</h3>
 				{isLoading ? (
 					<p>Loading user role...</p>
@@ -118,7 +118,7 @@ export function RBACDebug() {
 			</div>
 
 			{/* Detailed Auth Debug */}
-			<div className='p-4 bg-green-100 border border-green-300 rounded'>
+			<div className='p-4 bg-green-100 border border-green-300 rounded text-black'>
 				<h3 className='font-semibold'>Detailed Auth Debug</h3>
 				{debugLoading ? (
 					<p>Loading debug data...</p>
@@ -191,7 +191,7 @@ export function RBACDebug() {
 			</div>
 
 			{/* Profile Table Role (RBAC Fallback) */}
-			<div className='p-4 bg-red-100 border border-red-300 rounded'>
+			<div className='p-4 bg-red-100 border border-red-300 rounded text-black'>
 				<h3 className='font-semibold'>Profile Table Role (RBAC Fallback)</h3>
 				{profileRoleRBACLoading ? (
 					<p>Loading profile.role for RBAC...</p>
