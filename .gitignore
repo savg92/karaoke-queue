@@ -47,4 +47,7 @@ next-env.d.ts
 /test-results/
 
 # prisma
-/prisma/migrations/
+/prisma/migrations
+
+# supabase
+/supabase

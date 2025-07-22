@@ -1,7 +1,10 @@
 import { ReactQueryProvider } from '@/lib/react-query';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { AdminHeaderMenu } from './components/AdminHeaderMenu';
 import Link from 'next/link';
 import { Toaster } from 'sonner';
+import React from 'react';
+import { RBACDebugGate } from './components/RBACDebugGate';
 
 export default function DashboardLayout({
 	children,
@@ -18,10 +21,18 @@ export default function DashboardLayout({
 								Karaoke Queue - Host Dashboard
 							</h2>
 						</Link>
-						<ThemeToggle />
+						<div className='flex items-center gap-4'>
+							<AdminHeaderMenu />
+							<ThemeToggle />
+						</div>
 					</div>
 				</header>
-				<main>{children}</main>
+				<main>
+					<div className='container mx-auto px-4 py-4'>
+						<RBACDebugGate />
+					</div>
+					{children}
+				</main>
 				<Toaster />
 			</div>
 		</ReactQueryProvider>

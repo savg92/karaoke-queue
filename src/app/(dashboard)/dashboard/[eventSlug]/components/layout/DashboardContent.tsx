@@ -28,15 +28,9 @@ export function DashboardContent({
 	onReorderSignups,
 	onRefetchAll,
 }: DashboardContentProps) {
-	const queuedCount = signups.filter(
-		(s) => s.status === 'QUEUED'
-	).length;
-	const completedCount = signups.filter(
-		(s) => s.status === 'COMPLETE'
-	).length;
-	const performingSinger = signups.find(
-		(s) => s.status === 'PERFORMING'
-	);
+	const queuedCount = signups.filter((s) => s.status === 'QUEUED').length;
+	const completedCount = signups.filter((s) => s.status === 'COMPLETE').length;
+	const performingSinger = signups.find((s) => s.status === 'PERFORMING');
 	const upNextSinger = signups.find(
 		(s) => s.status === 'QUEUED' && s.position === 1
 	);
