@@ -231,7 +231,7 @@ This document outlines the detailed, step-by-step plan for building the Karaoke 
 ### **Modular Code Architecture:**
 
 - ** Security & Compliance:**
-  - [ ] Refactored all components to comply with strict 75-line limit (HARD LIMIT)
+  - [ ] Refactored all components to comply with strict 150-line limit (HARD LIMIT)
   - [ ] Split large components into feature-based folder structures
   - [ ] Separated concerns: types, utils, hooks, and UI components
   - [ ] Enhanced security through modular, auditable code structure
@@ -286,10 +286,10 @@ This document outlines the detailed, step-by-step plan for building the Karaoke 
     - [x] Set up Playwright configuration with multiple browser support.
 - [x] **Deployment to Vercel:**
   - [x] Testing infrastructure is complete and ready for deployment.
-  - [ ] Connect the GitHub repository to a new Vercel project.
-  - [ ] Configure all environment variables from `.env.local` in the Vercel project settings.
-  - [ ] Trigger a production deployment from the `main` branch.
-  - [ ] Test the deployed application thoroughly to ensure all features work as expected.
+  - [x] Connect the GitHub repository to a new Vercel project.
+  - [x] Configure all environment variables from `.env.local` in the Vercel project settings.
+  - [x] Trigger a production deployment from the `main` branch.
+  - [x] Test the deployed application thoroughly to ensure all features work as expected.
 
 ---
 
@@ -492,6 +492,57 @@ Route (app)                                 Size  First Load JS
   - [ ] Export attendee lists (CSV/PDF)
   - [ ] Print queue for non-digital displays
   - [ ] Custom announcement messages
+
+### 👥 **User Management System:**
+
+**Goal:** Implement comprehensive user management functionality for administrators to manage user accounts, roles, and permissions across the platform.
+
+- [ ] **User Account Management:**
+
+  - [ ] View all user profiles in a searchable, filterable table
+  - [ ] Edit user profile information (name, email, contact details)
+  - [ ] Account status management (active, suspended, deleted)
+  - [ ] User registration history and activity logs
+  - [ ] Bulk user operations (export, import, batch updates)
+
+- [ ] **Role & Permission Management:**
+
+  - [ ] Assign and modify user roles (Super Admin, Admin, Host, Viewer, Guest)
+  - [ ] Role-based permission matrix with granular controls
+  - [ ] Temporary role assignments with expiration dates
+  - [ ] Role inheritance and delegation capabilities
+  - [ ] Permission preview before role assignment
+
+- [ ] **User Interface Components:**
+
+  - [ ] `UserManagementDashboard.tsx`: Main interface for user administration
+  - [ ] `UserTable.tsx`: Sortable, filterable table of all users
+  - [ ] `UserEditDialog.tsx`: Modal for editing user details and roles
+  - [ ] `RoleAssignmentForm.tsx`: Interface for managing user roles and permissions
+  - [ ] `UserActivityLog.tsx`: Component showing user action history
+
+- [ ] **Server Actions & API:**
+
+  - [ ] `get-all-users.ts`: Fetch paginated user list with filtering
+  - [ ] `update-user-profile.ts`: Update user information and settings
+  - [ ] `assign-user-role.ts`: Modify user roles with validation
+  - [ ] `suspend-user.ts`: Temporarily disable user accounts
+  - [ ] `delete-user.ts`: Soft delete users with data retention
+
+- [ ] **Security & Validation:**
+
+  - [ ] Admin-only access control for user management functions
+  - [ ] Audit logging for all user management actions
+  - [ ] Role change notifications and approval workflows
+  - [ ] Data protection compliance (GDPR, user data handling)
+  - [ ] Input validation with Zod schemas for all user operations
+
+- [ ] **Advanced Features:**
+  - [ ] User impersonation for debugging (Super Admin only)
+  - [ ] User onboarding workflows and email invitations
+  - [ ] User analytics and engagement metrics
+  - [ ] Integration with existing RBAC monitoring system
+  - [ ] User session management and concurrent login controls
 
 ### 🏢 **Enterprise & Scalability:**
 
