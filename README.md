@@ -184,6 +184,8 @@ The application can be deployed to any platform that supports Next.js:
 
 **Note**: The `NEXT_PUBLIC_SITE_URL` variable is used for authentication redirects in production. If not set, the app will attempt to auto-detect the domain from request headers or fall back to Vercel's automatically provided `VERCEL_URL`.
 
+**Note**: Remember to update the authentication URL in Supabase settings to match your production domain.
+
 ### Database Setup
 
 The application uses Prisma with Supabase PostgreSQL. Key tables:

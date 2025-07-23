@@ -71,6 +71,7 @@ export function EnhancedRoleMonitoringDashboard() {
 							queryClient.invalidateQueries();
 							toast.success('Dashboard refreshed');
 						}}
+						className='flex items-center border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-150'
 					>
 						<RefreshCw className='h-4 w-4 mr-2' />
 						Refresh

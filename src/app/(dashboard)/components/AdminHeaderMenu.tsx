@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
@@ -17,24 +17,24 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog';
+// import {
+// 	Dialog,
+// 	DialogContent,
+// 	DialogDescription,
+// 	DialogHeader,
+// 	DialogTitle,
+// } from '@/components/ui/dialog';
 import { Shield, BarChart3, Users, Settings } from 'lucide-react';
 import { useProfileRole } from '@/lib/hooks/useRBAC';
-import { EnhancedRoleMonitoringDashboard } from '@/components/rbac/EnhancedRoleMonitoringDashboard';
+// import { EnhancedRoleMonitoringDashboard } from '@/components/rbac/EnhancedRoleMonitoringDashboard';
 import Link from 'next/link';
 
 export function AdminHeaderMenu() {
-	const [showRoleMonitoring, setShowRoleMonitoring] = useState(false);
+	// const [showRoleMonitoring, setShowRoleMonitoring] = useState(false);
 	const { data: profileRole, isLoading } = useProfileRole();
 
 	// Debug logging
-	console.log('AdminHeaderMenu - Role:', profileRole, 'Loading:', isLoading);
+	// console.log('AdminHeaderMenu - Role:', profileRole, 'Loading:', isLoading);
 
 	// Show loading state immediately
 	if (isLoading) {
@@ -77,7 +77,7 @@ export function AdminHeaderMenu() {
 						size='sm'
 					>
 						<Shield className='h-4 w-4 mr-2' />
-						Admin
+						{profileRole === 'SUPER_ADMIN' ? 'Super Admin Menu' : 'Admin Menu'}
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent
@@ -87,10 +87,10 @@ export function AdminHeaderMenu() {
 					<DropdownMenuLabel>Admin Tools</DropdownMenuLabel>
 					<DropdownMenuSeparator />
 
-					<DropdownMenuItem onClick={() => setShowRoleMonitoring(true)}>
+					{/* <DropdownMenuItem onClick={() => setShowRoleMonitoring(true)}>
 						<BarChart3 className='h-4 w-4 mr-2' />
 						Role Monitoring (Quick View)
-					</DropdownMenuItem>
+					</DropdownMenuItem> */}
 
 					<DropdownMenuItem asChild>
 						<Link href='/dashboard/admin/role-monitoring'>
@@ -112,7 +112,7 @@ export function AdminHeaderMenu() {
 			</DropdownMenu>
 
 			{/* Role Monitoring Dialog */}
-			<Dialog
+			{/* <Dialog
 				open={showRoleMonitoring}
 				onOpenChange={setShowRoleMonitoring}
 			>
@@ -131,7 +131,7 @@ export function AdminHeaderMenu() {
 						<EnhancedRoleMonitoringDashboard />
 					</div>
 				</DialogContent>
-			</Dialog>
+			</Dialog> */}
 		</>
 	);
 }
