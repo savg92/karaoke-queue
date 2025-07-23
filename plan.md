@@ -544,6 +544,117 @@ Route (app)                                 Size  First Load JS
   - [ ] Integration with existing RBAC monitoring system
   - [ ] User session management and concurrent login controls
 
+### ⚙️ **System Settings & Configuration:**
+
+**Goal:** Implement comprehensive system-wide settings that allow administrators and hosts to customize application behavior, appearance, and functionality.
+
+- [ ] **Application-Wide Settings:**
+
+  - [ ] System maintenance mode toggle
+  - [ ] Global announcement banner management
+  - [ ] Default application timezone configuration
+  - [ ] System-wide performance and caching settings
+  - [ ] API rate limiting configuration
+  - [ ] Database backup scheduling and retention policies
+
+- [ ] **Event Management Settings:**
+
+  - [ ] Default event duration and scheduling options
+  - [ ] Maximum number of signups per event (global limit)
+  - [ ] Default queue position algorithm selection
+  - [ ] Auto-close event settings (time-based or signup limit)
+  - [ ] Event archival and cleanup policies
+  - [ ] Default event visibility and access controls
+
+- [ ] **Queue Behavior Settings:**
+
+  - [ ] Default performance types available (Solo, Duo, Group)
+  - [ ] Queue reordering permissions (host-only vs collaborative)
+  - [ ] Auto-advance queue settings (time limits, skip inactive performers)
+  - [ ] Duplicate song/artist prevention rules
+  - [ ] Queue position fairness algorithm parameters
+  - [ ] Maximum queue length limits
+
+- [ ] **User Interface Settings:**
+
+  - [ ] System-wide theme configuration (light/dark/auto)
+  - [ ] Custom color scheme and branding options
+  - [ ] Dashboard layout preferences and defaults
+  - [ ] Font size and accessibility options
+  - [ ] Animation and transition speed controls
+  - [ ] Mobile-specific UI optimization toggles
+
+- [ ] **YouTube Integration Settings:**
+
+  - [ ] Default search prioritization ("Sing King" vs general results)
+  - [ ] YouTube API quota management and fallback options
+  - [ ] Video thumbnail quality and loading preferences
+  - [ ] Auto-search behavior configuration
+  - [ ] YouTube link handling (embed vs external)
+  - [ ] Search result filtering and content restrictions
+
+- [ ] **Notification & Communication Settings:**
+
+  - [ ] Email notification templates and preferences
+  - [ ] SMS alert configuration and provider settings
+  - [ ] Push notification behavior and timing
+  - [ ] System alert thresholds and recipients
+  - [ ] User communication preferences management
+  - [ ] Notification delivery scheduling (quiet hours)
+
+- [ ] **Security & Privacy Settings:**
+
+  - [ ] Session timeout and security policies
+  - [ ] Password complexity requirements
+  - [ ] Two-factor authentication enforcement
+  - [ ] IP allowlist/blocklist management
+  - [ ] Data retention and privacy compliance settings
+  - [ ] Audit log retention and access controls
+
+- [ ] **Performance & Monitoring Settings:**
+
+  - [ ] Real-time update frequency configuration
+  - [ ] Database query optimization settings
+  - [ ] Caching strategy and expiration rules
+  - [ ] Performance monitoring thresholds
+  - [ ] Error tracking and alerting configuration
+  - [ ] Analytics data collection preferences
+
+- [ ] **Integration & API Settings:**
+
+  - [ ] External service API key management
+  - [ ] Webhook configuration and endpoints
+  - [ ] Third-party integration toggles
+  - [ ] Data export format preferences
+  - [ ] Import/export scheduling and automation
+  - [ ] Calendar integration settings
+
+- [ ] **User Interface Components:**
+
+  - [ ] `SystemSettingsPanel.tsx`: Main settings interface with categorized tabs
+  - [ ] `SettingsGroup.tsx`: Reusable component for grouped settings
+  - [ ] `SettingToggle.tsx`: Boolean setting with description and validation
+  - [ ] `SettingSelect.tsx`: Dropdown setting with options and validation
+  - [ ] `SettingInput.tsx`: Text/number input with validation and help text
+  - [ ] `SettingsPreview.tsx`: Preview changes before applying
+
+- [ ] **Server Actions & API:**
+
+  - [ ] `get-system-settings.ts`: Fetch current system configuration
+  - [ ] `update-system-settings.ts`: Save settings with validation and rollback
+  - [ ] `reset-settings.ts`: Reset to default configuration
+  - [ ] `export-settings.ts`: Export configuration for backup/migration
+  - [ ] `import-settings.ts`: Import and validate settings configuration
+  - [ ] `validate-settings.ts`: Validate settings before applying
+
+- [ ] **Advanced Features:**
+  - [ ] Settings versioning and rollback capabilities
+  - [ ] Environment-specific settings (dev/staging/production)
+  - [ ] Settings templates for different venue types
+  - [ ] Bulk settings management for multi-tenant environments
+  - [ ] Settings change approval workflow for critical configurations
+  - [ ] Real-time settings sync across multiple admin sessions
+
 ### 🏢 **Enterprise & Scalability:**
 
 - [ ] **Multi-tenant Support:**
