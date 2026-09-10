@@ -58,7 +58,7 @@ export async function getBaseUrl(): Promise<string> {
 	}
 
 	// Final fallback for production - update this with your actual domain
-	const fallbackUrl = 'https://karaoke-queue.vercel.app';
+	const fallbackUrl = 'https://karaoke-queue-smoky.vercel.app/';
 	console.log('Using final fallback:', fallbackUrl);
 	return fallbackUrl;
 }
