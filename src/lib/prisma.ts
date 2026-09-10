@@ -2,23 +2,31 @@
 // By using a singleton, we ensure that only one instance of Prisma Client is running at any given time,
 // which prevents connection pool exhaustion and improves performance.
 
-import { PrismaClient } from '@prisma/client';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../../prisma/generated/client';
 
-// Declare a global variable to hold the Prisma Client instance.
-// This is necessary because in a serverless environment, the module might be re-evaluated,
-// and we want to persist the client across multiple invocations.
 declare global {
 	var prisma: PrismaClient | undefined;
+	var pgPool: Pool | undefined;
 }
 
-// Initialize the Prisma Client.
-// If a global instance already exists, use it; otherwise, create a new one.
-// In a development environment, the global object is used to cache the client,
-// preventing the creation of new clients on every hot reload.
-export const prisma = global.prisma || new PrismaClient();
+const pool =
+	global.pgPool ||
+	new Pool({
+		connectionString: process.env.DATABASE_URL,
+	});
 
-// If we are not in a production environment, assign the Prisma Client to the global object.
-// This ensures that the same client is reused during development, avoiding performance issues.
+if (process.env.NODE_ENV !== 'production') {
+	global.pgPool = pool;
+}
+
+const adapter = new PrismaPg(pool);
+
+export const prisma = global.prisma || new PrismaClient({ adapter });
+
 if (process.env.NODE_ENV !== 'production') {
 	global.prisma = prisma;
 }
+
+export * from '../../prisma/generated/client';

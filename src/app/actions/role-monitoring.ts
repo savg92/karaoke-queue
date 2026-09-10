@@ -12,7 +12,7 @@ import { prisma } from '@/lib/prisma';
 import { UserRole, RoleEventType, RoleEvent } from '@/lib/rbac/types-fixed';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import type { JsonValue } from '@prisma/client/runtime/library';
+import type { JsonValue } from '@prisma/client/runtime/client';
 
 // Database query result types
 interface RoleDistributionResult {
