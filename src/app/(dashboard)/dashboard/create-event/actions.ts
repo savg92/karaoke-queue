@@ -117,7 +117,7 @@ export async function createEvent(data: CreateEventData) {
 			return {
 				success: false,
 				error: 'Invalid input data',
-				details: error.errors,
+				details: error.issues,
 			};
 		}
 

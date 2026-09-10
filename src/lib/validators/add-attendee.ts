@@ -7,7 +7,7 @@ import { z } from 'zod';
 export const addAttendeeSchema = z
 	.object({
 		performanceType: z.enum(['SOLO', 'DUET', 'GROUP'], {
-			required_error: 'Please select a performance type',
+			error: 'Please select a performance type',
 		}),
 		singerName: z
 			.string()

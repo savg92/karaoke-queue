@@ -21,7 +21,7 @@ export const baseSignupSchema = z.object({
 });
 
 export const performanceTypeSchema = z.enum(['SOLO', 'DUET', 'GROUP'], {
-	required_error: 'Please select a performance type',
+	error: 'Please select a performance type',
 });
 
 // Host add attendee schema (simplified for manual addition)

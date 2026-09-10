@@ -3,7 +3,6 @@ import path from 'path';
 
 const nextConfig: NextConfig = {
 	// Disable telemetry
-	telemetry: false,
 	images: {
 		remotePatterns: [
 			{
@@ -27,12 +26,12 @@ const nextConfig: NextConfig = {
 			'@radix-ui/react-select',
 		],
 	},
-	// Turbopack configuration (stable in Next.js 15+)
+	// Turbopack configuration
 	turbopack: {
 		resolveAlias: {
 			// Alias for common imports
 			'@': './src',
-			'@prisma/client': './prisma/generated/client',
+			'@prisma/client': './prisma/generated/browser',
 		},
 	},
 	// Bundle optimization
