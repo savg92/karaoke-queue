@@ -5,12 +5,12 @@
 import { createBrowserClient } from '@supabase/ssr';
 
 export function createClient() {
-	// The createBrowserClient function initializes a new Supabase client.
-	// It requires the Supabase project URL and the anonymous public key,
-	// which are retrieved from environment variables.
-	// These variables must be prefixed with NEXT_PUBLIC_ to be accessible on the client side.
+	const supabaseKey =
+		process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
 	return createBrowserClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+		supabaseKey
 	);
 }
