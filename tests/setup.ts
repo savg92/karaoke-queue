@@ -31,6 +31,15 @@ vi.mock('next/image', () => ({
 		React.createElement('img', props),
 }));
 
+// Mock next/headers
+vi.mock('next/headers', () => ({
+	headers: vi.fn(async () => new Headers({ 'x-forwarded-for': '127.0.0.1' })),
+	cookies: vi.fn(async () => ({
+		getAll: vi.fn(() => []),
+		set: vi.fn(),
+	})),
+}));
+
 // Mock environment variables
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-key';

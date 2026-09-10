@@ -19,7 +19,7 @@
     "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:all": "bun test && bun test:e2e",
+    "test:all": "bun run test:run && bun run test:e2e",
     "db:seed": "bunx tsx prisma/seed.ts",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:bundle": "bunx @next/bundle-analyzer"

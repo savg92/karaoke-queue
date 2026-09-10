@@ -11,8 +11,9 @@ export default defineConfig({
 		exclude: ['**/node_modules/**', '**/e2e/**', '**/dist/**'],
 	},
 	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, './src'),
-		},
+		alias: [
+			{ find: '@', replacement: path.resolve(__dirname, './src') },
+			{ find: /^@prisma\/client$/, replacement: path.resolve(__dirname, './prisma/generated/client') },
+		],
 	},
 });

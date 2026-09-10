@@ -2,18 +2,23 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { addSinger } from '@/app/actions/add-singer';
 
 // Mock Prisma
-vi.mock('@/lib/prisma', () => ({
-	__esModule: true,
-	prisma: {
+vi.mock('@/lib/prisma', () => {
+	const mockPrisma = {
+		$transaction: vi.fn((cb) => (typeof cb === 'function' ? cb(mockPrisma) : Promise.resolve([]))),
 		event: {
-			findUnique: vi.fn(),
+			findUnique: vi.fn().mockResolvedValue({ id: 'test-event', slug: 'test-event' }),
 		},
 		signup: {
-			findMany: vi.fn(),
-			create: vi.fn(),
+			findMany: vi.fn().mockResolvedValue([]),
+			create: vi.fn().mockResolvedValue({ id: 'test-id' }),
+			update: vi.fn().mockResolvedValue({}),
 		},
-	},
-}));
+	};
+	return {
+		__esModule: true,
+		prisma: mockPrisma,
+	};
+});
 
 // Mock revalidatePath
 vi.mock('next/cache', () => ({
@@ -91,10 +96,8 @@ describe('Server Action Input Validation', () => {
 		// The actual database interaction would be mocked in a full integration test
 		const result = await addSinger('test-event', formData);
 
-		// Since we're mocking the database, we expect this to fail
-		// But the validation should have passed
-		expect(result.success).toBe(false);
-		// The failure should be from database interaction, not validation
-		expect(result.errors?._form).toBeDefined();
+		// With mocks in place, verify the action succeeds
+		expect(result.success).toBe(true);
+		expect(result.queuePosition).toBe(1);
 	});
 });
