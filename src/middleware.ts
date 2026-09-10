@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
 	const { user, response } = await updateSession(request);
 
 	// Define the routes that are considered public and do not require authentication.
-	const publicRoutes = ['/login', '/auth/callback'];
+	const publicRoutes = ['/login', '/auth/callback', '/reset-password', '/change-password'];
 
 	// Check if the current path is a protected route.
 	// A route is protected if it's not in the publicRoutes list and doesn't start with /event/ (for public event signups).

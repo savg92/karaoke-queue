@@ -1,6 +1,7 @@
 import { ReactQueryProvider } from '@/lib/react-query';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { AdminHeaderMenu } from './components/AdminHeaderMenu';
+import { UserAvatarMenu } from './components/UserAvatarMenu';
 import Link from 'next/link';
 import { Toaster } from 'sonner';
 import React from 'react';
@@ -23,6 +24,7 @@ export default function DashboardLayout({
 						</Link>
 						<div className='flex items-center gap-4'>
 							<AdminHeaderMenu />
+							<UserAvatarMenu />
 							<ThemeToggle />
 						</div>
 					</div>

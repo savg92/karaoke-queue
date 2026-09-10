@@ -1,16 +1,23 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
 import Image from 'next/image';
+import { prisma } from '@/lib/prisma';
+import { NextEventCard } from './components/NextEventCard';
+import { FeatureCards } from './components/FeatureCards';
 
-export default function HomePage() {
+// Refresh the next-event lookup regularly so newly created events appear
+// without requiring a redeploy (page stays statically optimized).
+export const revalidate = 60;
+
+export default async function HomePage() {
+	const nextEvent = await prisma.event.findFirst({
+		where: { date: { gte: new Date() } },
+		orderBy: { date: 'asc' },
+	});
+
+	const signupHref = nextEvent ? `/event/${nextEvent.slug}` : '/event/test-event';
+
 	return (
 		<div className='min-h-screen bg-background'>
 			{/* Header with theme toggle */}
@@ -19,9 +26,14 @@ export default function HomePage() {
 			</div>
 
 			<div className='container mx-auto px-4 py-16'>
-				
-				<div>
-					<img src="./../../images/Screenshot 2026-09-10 at 02.04.37.png" alt="Hot Mess Karaoke" />
+				<div className='flex justify-center mb-8'>
+					<Image
+						src='/hot-mess.png'
+						alt='Hot Mess Karaoke'
+						width={290}
+						height={296}
+						priority
+					/>
 				</div>
 				<div className='space-y-6 text-center'>
 					<h1 className='text-5xl font-bold text-foreground'>
@@ -32,78 +44,26 @@ export default function HomePage() {
 						queues, and let attendees sign up seamlessly.
 					</p>
 
+					{nextEvent ? (
+						<NextEventCard
+							name={nextEvent.name}
+							date={nextEvent.date}
+							description={nextEvent.description}
+							slug={nextEvent.slug}
+						/>
+					) : null}
+
 					<div className='flex justify-center gap-4'>
-						<Button
-							asChild
-							size='lg'
-						>
-							<Link href='/login'>Host an Event</Link>
+						<Button asChild size='lg'>
+							<Link href={signupHref}>Sign Up to Sing</Link>
 						</Button>
-						<Button
-							asChild
-							variant='outline'
-							size='lg'
-						>
-							<Link href='/event/test-event'>Join Test Event</Link>
+						<Button asChild variant='outline' size='lg'>
+							<Link href='/login'>Host Dashboard</Link>
 						</Button>
 					</div>
 				</div>
 
-				<div className='grid md:grid-cols-2 gap-8 mt-16'>
-					<Card>
-						<CardHeader>
-							<CardTitle>For Hosts</CardTitle>
-							<CardDescription>
-								Manage your karaoke event with powerful tools
-							</CardDescription>
-						</CardHeader>
-						<CardContent className='space-y-2'>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-primary'></div>
-								<span>Real-time queue management</span>
-							</div>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-primary'></div>
-								<span>Track performance status</span>
-							</div>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-primary'></div>
-								<span>Share event with QR codes</span>
-							</div>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-primary'></div>
-								<span>YouTube integration</span>
-							</div>
-						</CardContent>
-					</Card>
-
-					<Card>
-						<CardHeader>
-							<CardTitle>For Attendees</CardTitle>
-							<CardDescription>
-								Easy signup process for karaoke participants
-							</CardDescription>
-						</CardHeader>
-						<CardContent className='space-y-2'>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-secondary'></div>
-								<span>Quick song signup</span>
-							</div>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-secondary'></div>
-								<span>Solo, duet, or group options</span>
-							</div>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-secondary'></div>
-								<span>No account required</span>
-							</div>
-							<div className='flex items-center gap-2'>
-								<div className='h-2 w-2 rounded-full bg-secondary'></div>
-								<span>Fair queue positioning</span>
-							</div>
-						</CardContent>
-					</Card>
-				</div>
+				<FeatureCards />
 			</div>
 		</div>
 	);
