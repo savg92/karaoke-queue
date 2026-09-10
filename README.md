@@ -39,7 +39,7 @@ A real-time web application for managing karaoke nights with a secure host dashb
 1. Clone the repository:
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/savg92/karaoke-queue
 cd karaoke-queue
 ```
 
