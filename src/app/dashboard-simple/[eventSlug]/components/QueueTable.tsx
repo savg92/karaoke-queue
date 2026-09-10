@@ -35,7 +35,7 @@ export function QueueTable({ eventName, signups }: QueueTableProps) {
 		return (
 			<Card>
 				<CardHeader>
-					<CardTitle>Karaoke Queue</CardTitle>
+					<CardTitle>Hot Mess Karaoke</CardTitle>
 					<CardDescription>Current queue for {eventName}</CardDescription>
 				</CardHeader>
 				<CardContent>

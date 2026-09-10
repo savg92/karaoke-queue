@@ -7,7 +7,7 @@
 
 import { performance } from 'perf_hooks';
 
-console.log('🚀 Karaoke Queue Performance Validation\n');
+// console.log('🚀 Karaoke Queue Performance Validation\n');
 
 // Test 1: Performance Monitoring Utilities
 console.log('🔍 Testing Performance Monitoring...');
@@ -22,16 +22,16 @@ try {
 	await measureDatabaseQuery('test-query', testQuery);
 	const duration = performance.now() - start;
 
-	console.log(
-		`✅ Database query monitoring working (${duration.toFixed(2)}ms)`
-	);
+	// console.log(
+	// 	`✅ Database query monitoring working (${duration.toFixed(2)}ms)`
+	// );
 
 	// Test server action monitoring
 	const testAction = async (input: string) => `processed: ${input}`;
 	const monitoredAction = withPerformanceMonitoring('test-action', testAction);
 	const result = await monitoredAction('test');
 
-	console.log(`✅ Server action monitoring working: ${result}`);
+	// console.log(`✅ Server action monitoring working: ${result}`);
 } catch (error) {
 	console.log('❌ Performance monitoring error:', error);
 }

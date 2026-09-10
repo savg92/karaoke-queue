@@ -47,8 +47,8 @@ export function QRCodeDialog({
 	const handleShare = () => {
 		share(
 			{
-				title: `Join ${eventName} Karaoke Queue`,
-				text: `Join the karaoke queue for ${eventName} on ${formattedDate}!`,
+				title: `Join Hot Mess Karaoke for ${eventName}`,
+				text: `Join the Hot Mess Karaoke queue for ${eventName} on ${formattedDate}!`,
 				url: eventUrl,
 			},
 			'Event link copied to clipboard!'

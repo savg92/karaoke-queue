@@ -31,7 +31,7 @@ export function SignupForm({ eventId, onSuccess }: SignupFormProps) {
 			<CardHeader>
 				<CardTitle>Sign Up to Sing</CardTitle>
 				<CardDescription>
-					Fill out the form below to add yourself to the karaoke queue.
+					Fill out the form below to add yourself to the Hot Mess Karaoke.
 				</CardDescription>
 			</CardHeader>
 			<CardContent>

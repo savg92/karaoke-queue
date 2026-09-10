@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: 'Karaoke Queue',
+	title: 'Hot Mess Karaoke',
 	description: 'Manage your karaoke night with a fair queue system',
 };
 

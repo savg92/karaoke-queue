@@ -8,26 +8,31 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
+import Image from 'next/image';
 
 export default function HomePage() {
 	return (
-		<div className="min-h-screen bg-background">
+		<div className='min-h-screen bg-background'>
 			{/* Header with theme toggle */}
-			<div className="absolute right-4 top-4">
+			<div className='absolute right-4 top-4'>
 				<ThemeToggle />
 			</div>
 
-			<div className="container mx-auto px-4 py-16">
-				<div className="space-y-6 text-center">
-					<h1 className="text-5xl font-bold text-foreground">
-						Karaoke Queue
+			<div className='container mx-auto px-4 py-16'>
+				
+				<div>
+					<img src="./../../images/Screenshot 2026-09-10 at 02.04.37.png" alt="Hot Mess Karaoke" />
+				</div>
+				<div className='space-y-6 text-center'>
+					<h1 className='text-5xl font-bold text-foreground'>
+						Hot Mess Karaoke
 					</h1>
-					<p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+					<p className='mx-auto max-w-2xl text-xl text-muted-foreground'>
 						The modern way to manage your karaoke night. Host events, manage
 						queues, and let attendees sign up seamlessly.
 					</p>
 
-					<div className="flex justify-center gap-4">
+					<div className='flex justify-center gap-4'>
 						<Button
 							asChild
 							size='lg'
@@ -44,7 +49,7 @@ export default function HomePage() {
 					</div>
 				</div>
 
-				<div className="grid md:grid-cols-2 gap-8 mt-16">
+				<div className='grid md:grid-cols-2 gap-8 mt-16'>
 					<Card>
 						<CardHeader>
 							<CardTitle>For Hosts</CardTitle>
@@ -52,21 +57,21 @@ export default function HomePage() {
 								Manage your karaoke event with powerful tools
 							</CardDescription>
 						</CardHeader>
-						<CardContent className="space-y-2">
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-primary"></div>
+						<CardContent className='space-y-2'>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-primary'></div>
 								<span>Real-time queue management</span>
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-primary"></div>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-primary'></div>
 								<span>Track performance status</span>
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-primary"></div>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-primary'></div>
 								<span>Share event with QR codes</span>
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-primary"></div>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-primary'></div>
 								<span>YouTube integration</span>
 							</div>
 						</CardContent>
@@ -79,21 +84,21 @@ export default function HomePage() {
 								Easy signup process for karaoke participants
 							</CardDescription>
 						</CardHeader>
-						<CardContent className="space-y-2">
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-secondary"></div>
+						<CardContent className='space-y-2'>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-secondary'></div>
 								<span>Quick song signup</span>
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-secondary"></div>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-secondary'></div>
 								<span>Solo, duet, or group options</span>
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-secondary"></div>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-secondary'></div>
 								<span>No account required</span>
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="h-2 w-2 rounded-full bg-secondary"></div>
+							<div className='flex items-center gap-2'>
+								<div className='h-2 w-2 rounded-full bg-secondary'></div>
 								<span>Fair queue positioning</span>
 							</div>
 						</CardContent>

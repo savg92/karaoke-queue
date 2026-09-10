@@ -18,7 +18,7 @@ export default function DashboardLayout({
 					<div className='container mx-auto flex items-center justify-between px-4 py-4'>
 						<Link href='/dashboard'>
 							<h2 className='text-lg font-semibold'>
-								Karaoke Queue - Host Dashboard
+								Hot Mess Karaoke - Host Dashboard
 							</h2>
 						</Link>
 						<div className='flex items-center gap-4'>
