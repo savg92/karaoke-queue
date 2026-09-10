@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import path from 'path';
 
 const nextConfig: NextConfig = {
 	// Disable telemetry
@@ -31,6 +32,7 @@ const nextConfig: NextConfig = {
 		resolveAlias: {
 			// Alias for common imports
 			'@': './src',
+			'@prisma/client': './prisma/generated/client',
 		},
 	},
 	// Bundle optimization
@@ -47,9 +49,16 @@ const nextConfig: NextConfig = {
 			'@parcel/watcher': '@parcel/watcher',
 		});
 
-		// Resolve native modules properly
+		// Resolve native modules and Prisma v7 generated client
 		config.resolve.alias = {
 			...config.resolve.alias,
+			'@prisma/client$': isServer
+				? path.resolve(process.cwd(), 'prisma/generated/client')
+				: path.resolve(process.cwd(), 'prisma/generated/browser'),
+			'.prisma/client/index-browser': path.resolve(process.cwd(), 'prisma/generated/browser'),
+			'.prisma/client': isServer
+				? path.resolve(process.cwd(), 'prisma/generated/client')
+				: path.resolve(process.cwd(), 'prisma/generated/browser'),
 		};
 
 		// Help webpack handle native binaries
